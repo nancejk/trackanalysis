@@ -36,9 +36,10 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 	RAT::DS::MC* theDSMC = NULL;
 	static TrackedOpticalPhoton thePhoton;
 	TTree* theResultingTree = new TTree("T","Data From Tracked Optical Photons");
-	TBranch* theBranch = theResultingTree->Branch("TrackedOpticalPhotons",
-												  &thePhoton,
-												  "eventNo/i:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:defHit/b:indefHit:reemitted:cerenkov:scintillation");
+	TBranch* theBranch = theResultingTree->Branch(
+				"TrackedOpticalPhotons",
+			  	&thePhoton,
+				"eventNo/i:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:defHit/b:indefHit:reemitted:cerenkov:scintillation");
 
 	for ( int eventIndex = 0; eventIndex < theDS.GetTotal(); eventIndex++  )
 	{
@@ -76,7 +77,7 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 		//Now print some status information.
 		std::cout << "In current event: \n" 
 				<< "\t" << tracks.size() << " photon tracks found.\n"
-				<< "\t" << static_cast<double>(tracks.size())/static_cast<double>(total_track_count) << " percent of total.\n"
+				<< "\t" << 100*static_cast<double>(tracks.size())/static_cast<double>(total_track_count) << " percent of total.\n"
 		//Make sure that the number of confirmed hits as reported by MCPMTCount() and that
 		//we've recorded in the vector<bool> are actually the same.  std::accumulate can do a good job
 		//of this.
@@ -99,31 +100,35 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 			thePhoton.fGenerationTime = curTrack.GetMCTrackStep(0)->GetGlobalTime();
 			thePhoton.fGenerationRadius = curTrack.GetMCTrackStep(0)->GetEndpoint().Mag();
 			thePhoton.fGenerationEnergy = curTrack.GetMCTrackStep(0)->GetKE();
-			if ( curTrack.GetMCTrackStep(0)->GetProcess() == "Attenuation" ) std::cout << "here" << std::endl;
-						
+			
+			//A boundary checking flag.  This gets used during the reflection checks.
+			static bool LastStepEndedOnBoundary(false);			
+
 			//Now we recurse into the track itself and do our dirty work.  Firstly, though,
 			//if there is somehow only the zeroth track step, we need to skip this guy altogether.
 			//Note that this is highly unlikely... but nonetheless, the code is unsafe without it.
 			if ( curTrack.GetMCTrackStepCount() == 1 ) 
 				{ tracks.pop(); continue; }
 			
+			//Start looping over the steps.
 			for ( std::size_t step_index = 0; step_index < curTrack.GetMCTrackStepCount(); step_index++ )
 			{
-				//Get the current step.
+				//Get the current step and set the process variable.
 				RAT::DS::MCTrackStep curStep = *curTrack.GetMCTrackStep(step_index);
-				
+				static std::string currentProcess = curStep.GetProcess();				
+
 				//Checks to see if the photon has been reemitted.  If so, mark it.  This doesn't
 				//actually do anything if the photon has already been marked as such.  This 
 				//conditional is short-circuited, so the second statement won't be checked unless
 				//the first is true.
-				if ( ( curStep.GetProcess() == "Reemission" ) && ( thePhoton.reemitted == false ) )
+				if ( ( currentProcess == "Reemission" ) && ( thePhoton.reemitted == false ) )
 					{ thePhoton.reemitted = true; }
 				
-				if ( ( curStep.GetProcess() == "Scintillation" ) && ( thePhoton.scintillation == false ) )
+				if ( ( currentProcess == "Scintillation" ) && ( thePhoton.scintillation == false ) )
 					{ thePhoton.scintillation = true; }
 				
 				//Checks to see if the photon is Cerenkov radiation.
-				if ( ( curStep.GetProcess() == "Cerenkov" ) && ( thePhoton.cerenkov == false ) )
+				if ( ( currentProcess == "Cerenkov" ) && ( thePhoton.cerenkov == false ) )
 					{ thePhoton.cerenkov = true; }
 				
 				//This will check if the current step is involved in a process that can
@@ -131,8 +136,14 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 				//it is actually a hit (a definite hit), as that is determined probabilistically at
 				//(simulation) runtime.  Therefore this is called an indefinite hit.  Not all 
 				//indefinite hits are definite hits, but all definite hits are indefinite hits.
-				if ( curStep.GetProcess().find("G4FastSimulationManagerProcess") != string::npos ) 
+				if ( currentProcess.find("G4FastSimulationManagerProcess") != string::npos ) 
 					{ thePhoton.fPMTHitTime = curStep.GetGlobalTime(); thePhoton.fPMTHitEnergy = curStep.GetKE(); thePhoton.indefHit = true; }
+
+				//If this step ended on a boundary, then the StepStatus will mark it as fGeomBoundary.
+				//During the next step, we can check if this flag was set, and if so, do reflection
+				//checking.  If it didn't, but the flag is set from the previous step, unset it.
+				if ( curStep.GetStepStatus() == "GeomBoundary") LastStepEndedOnBoundary = true;
+				else if ( LastStepEndedOnBoundary ) LastStepEndedOnBoundary = false;
 			}
 			
 			//We've done all of the necessary steps, so on to filling the tree and
