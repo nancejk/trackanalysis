@@ -71,17 +71,21 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 		//Now we fix the vector up with the proper information about which tracks caused hits.
 		for ( std::size_t mc_pmt_hit = 0; mc_pmt_hit < num_hits; mc_pmt_hit++ )
 		{
-			//Flip the bit in the TrackID'th slot.
-			known_hits[ theDSMC->GetMCPMT(mc_pmt_hit)->GetMCPhoton(0)->GetTrackID() - 1 ].flip();
+			//Iterate through all MCPhotons, flipping the TrackID'th bit in the vector<bool>
+			//to indicate a hit.
+			for ( std::size_t mc_phot = 0; mc_phot < theDSMC->GetMCPMT(mc_pmt_hit)->GetMCPhotonCount(); mc_phot++ )
+			{	
+				known_hits[ theDSMC->GetMCPMT(mc_pmt_hit)->GetMCPhoton(mc_phot)->GetTrackID() - 1 ].flip();
+			}
 		}
 		//Now print some status information.
 		std::cout << "In current event: \n" 
-				<< "\t" << tracks.size() << " photon tracks found.\n"
+				<< "\t" << tracks.size() << " optical photon tracks found\n"
 				<< "\t" << 100.0*static_cast<double>(tracks.size())/static_cast<double>(total_track_count) << " percent of total.\n"
 		//Make sure that the number of confirmed hits as reported by MCPMTCount() and that
 		//we've recorded in the vector<bool> are actually the same.  std::accumulate can do a good job
 		//of this.
-				<< "\t" << num_hits << " confirmed hits; " << std::accumulate(known_hits.begin(), known_hits.end(), 0) << " recorded."
+				<< "\t" << num_hits << " hit PMTs; " << std::accumulate(known_hits.begin(), known_hits.end(), 0) << " individual hits recorded."
 				<< std::endl;
 		
 		//OK, we are now ready to process each individual track.  This is easy... just look at the top of the queue!
@@ -102,7 +106,8 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 			thePhoton.fGenerationEnergy = curTrack.GetMCTrackStep(0)->GetKE();
 			
 			//A boundary checking flag.  This gets used during the reflection checks.
-			static bool LastStepEndedOnBoundary(false);			
+			bool LastStepEndedOnBoundary(false);			
+			std::string currentProcess("");
 
 			//Now we recurse into the track itself and do our dirty work.  Firstly, though,
 			//if there is somehow only the zeroth track step, we need to skip this guy altogether.
@@ -115,7 +120,7 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 			{
 				//Get the current step and set the process variable.
 				RAT::DS::MCTrackStep curStep = *curTrack.GetMCTrackStep(step_index);
-				static std::string currentProcess = curStep.GetProcess();				
+				currentProcess = curStep.GetProcess();
 
 				//Checks to see if the photon has been reemitted.  If so, mark it.  This doesn't
 				//actually do anything if the photon has already been marked as such.  This 
