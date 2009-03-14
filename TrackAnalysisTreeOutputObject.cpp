@@ -77,7 +77,7 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 		//Now print some status information.
 		std::cout << "In current event: \n" 
 				<< "\t" << tracks.size() << " photon tracks found.\n"
-				<< "\t" << 100*static_cast<double>(tracks.size())/static_cast<double>(total_track_count) << " percent of total.\n"
+				<< "\t" << 100.0*static_cast<double>(tracks.size())/static_cast<double>(total_track_count) << " percent of total.\n"
 		//Make sure that the number of confirmed hits as reported by MCPMTCount() and that
 		//we've recorded in the vector<bool> are actually the same.  std::accumulate can do a good job
 		//of this.
