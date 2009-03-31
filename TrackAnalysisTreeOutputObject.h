@@ -33,6 +33,7 @@ enum processes
 struct TrackedOpticalPhoton
 {
 	unsigned eventNo;
+	unsigned parentID;
 	float fGenerationTime;
 	float fGenerationRadius;
 	float fGenerationEnergy;

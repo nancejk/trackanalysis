@@ -39,7 +39,7 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 	TBranch* theBranch = theResultingTree->Branch(
 				"TrackedOpticalPhotons",
 			  	&thePhoton,
-				"eventNo/i:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:defHit/b:indefHit:reemitted:cerenkov:scintillation");
+				"eventNo/i:parentID:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:defHit/b:indefHit:reemitted:cerenkov:scintillation");
 
 	for ( int eventIndex = 0; eventIndex < theDS.GetTotal(); eventIndex++  )
 	{
@@ -97,6 +97,7 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 			//tracks.front() object is the track we are working with!  It is in no particular spatial or temporal
 			//order, but that is immaterial.
 			RAT::DS::MCTrack curTrack = tracks.front();
+			thePhoton.parentID = curTrack.GetParentID();
 			//Now check the trackID against the list of known hits.
 			if ( known_hits[curTrack.GetTrackID() - 1] == true ) thePhoton.defHit = true;
 						
