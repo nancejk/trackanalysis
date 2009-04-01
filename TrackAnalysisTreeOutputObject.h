@@ -20,6 +20,11 @@
 //from the optical photon tracks inside the DS.
 TTree* GrowPhotonTree( RAT::DSReader& );
 
+//This is a new one that I am testing.  It will take a RAT data structure with
+//MCTracks in it, join the necessary tracks to form full tracks, and then
+//populate a tree with the necessary information.
+TTree* GrowJoinedPhotonTree( RAT::DSReader& );
+
 //An enumerated data type that will allow us to remember processes as hexadecimal numbers.
 //The idea is that you just add to the 'history' of the photon whatever number corresponds
 //to that type of event - history += eReflection adds a reflection to the memory of the photon.
