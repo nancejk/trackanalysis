@@ -15,6 +15,7 @@ using std::string;
 void ClearTrackedPhoton(TrackedOpticalPhoton& thePhoton)
 {
 	thePhoton.eventNo = 0;
+	thePhoton.parentID = 0;
 	thePhoton.fGenerationTime = 0;
 	thePhoton.fGenerationRadius = 0;
 	thePhoton.fGenerationEnergy = 0;
@@ -54,7 +55,7 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 		//At this point we should already know that the event is good (i.e. actually contains track data).
 		//Now instead of using the TrackNav and TrackCursor, we build two objects. One is a queue containing
 		//MCTracks, and the other is a boolean vector that will contain information about the 'real' hits.
-		std::queue<RAT::DS::MCTrack> tracks;
+		std::dequeue<RAT::DS::MCTrack> tracks;
 		//The way this object works is simple.  Each of its positions corresponds to a trackID.  If the trackID
 		//in question is one that is known to have caused a photoelectron to be generated in a tube, then
 		//known_hits[trackID] is true.  Otherwise it is false.  This provides a very fast and easy way to check
@@ -65,7 +66,7 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 		for ( std::size_t mc_track_index = 0; mc_track_index < total_track_count; mc_track_index++ )
 		{ 
 			if ( theDSMC->GetMCTrack(mc_track_index)->GetParticleName() == "opticalphoton" ) 
-			{ tracks.push( *theDSMC->GetMCTrack(mc_track_index) ); }
+			{ tracks.push_back( *theDSMC->GetMCTrack(mc_track_index) ); }
 		}
 		
 		//Now we fix the vector up with the proper information about which tracks caused hits.
@@ -114,7 +115,7 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 			//if there is somehow only the zeroth track step, we need to skip this guy altogether.
 			//Note that this is highly unlikely... but nonetheless, the code is unsafe without it.
 			if ( curTrack.GetMCTrackStepCount() == 1 ) 
-				{ tracks.pop(); continue; }
+				{ tracks.pop_front(); continue; }
 			
 			//Start looping over the steps.
 			for ( std::size_t step_index = 0; step_index < curTrack.GetMCTrackStepCount(); step_index++ )
@@ -156,7 +157,7 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 			//finishing the iteration.
 			theResultingTree->Fill();
 			ClearTrackedPhoton(thePhoton);
-			tracks.pop();
+			tracks.pop_front();
 		}
 	}
 	//Print the result and return it.
