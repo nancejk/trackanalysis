@@ -207,3 +207,65 @@ RAT::DS::MCTrack JoinMCTracks(std::vector<RAT::DS::MCTrack> theTrackList)
 	return theJoinedTrack;
 }
 
+TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
+{
+	//Now we build the fundamental blocks of our operation.  The TrackedOpticalPhoton is static to avoid
+	//building many copies of the object on the stack, which is unnecessary.  We reset the photon at the
+	//end of each track for this reason.
+	RAT::DS::Root* theDSEvent = NULL;
+	RAT::DS::MC* theDSMC = NULL;
+	static TrackedOpticalPhoton thePhoton;
+	TTree* theResultingTree = new TTree("T","Data From Tracked Optical Photons");
+	TBranch* theBranch = theResultingTree->Branch(
+												  "TrackedOpticalPhotons",
+												  &thePhoton,
+												  "eventNo/i:parentID:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:defHit/b:indefHit:reemitted:cerenkov:scintillation");
+	//Typedef some long-winded objects that we want to use in the track
+	//analysis.
+	typedef std::map<unsigned,RAT::DS::MCTrack> TrackFromTrackIDMap;
+	typedef std::pair<unsigned,RAT::DS::MCTrack> IDAndTrack;
+	typedef std::vector<bool> DynamicBitset;
+		
+	for ( int eventIndex = 0; eventIndex < theDS.GetTotal(); eventIndex++  )
+	{
+		//Move to the next event.
+		theDSEvent = theDS.GetEvent(eventIndex);
+		theDSMC = theDSEvent->GetMC();
+		//Now for future reference, the number of hits and tracks:
+		std::size_t num_hits = theDSMC->GetMCPMTCount();
+		std::size_t total_track_count = theDSMC->GetMCTrackCount();
+		
+		//Now we need to build a DynamicBitset that will keep track of which
+		//photons caused hits in the detectors.  This will be very important
+		//in the track joining step to get things right.  By default all bits
+		//are set to zero.
+		DynamicBitset known_hits(total_track_count,false);
+		
+		//This will let us dynamically keep track of the number of children
+		//a track has without knowing apriori how many optical photon tracks
+		//there are.  May save the trouble of iterating through all of the tracks
+		//again, but is O(ln(n)+n) complex.
+		std::multiset<unsigned> ChildCount;
+		
+		//And here is our map full of tracks indexed by their trackID.
+		TrackFromTrackIDMap TrackFromTrackID;
+		
+		//Now we fill the map with the optical photon tracks, indexed by their
+		//trackID.  At the same time, we keep track of the number of children
+		//any one track has.
+		for ( std::size_t mc_track_index = 0; mc_track_index < total_track_count; mc_track_index++ )
+		{ 
+			if ( theDSMC->GetMCTrack(mc_track_index)->GetParticleName() == "opticalphoton" ) 
+			{ 
+				IDAndTrack thePair = IDAndTrack( *theDSMC->GetMCTrack(mc_track_index)->GetTrackID(), *theDSMC->GetMCTrack(mc_track_index) );
+				TrackFromTrackID.insert(thePair);
+				ChildCount.insert(thePair.second);
+			}
+		}
+	}
+	
+	//Spit out the tree we generated.
+	return theResultingTree;
+}
+	
+
