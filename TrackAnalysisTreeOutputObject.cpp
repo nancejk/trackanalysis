@@ -172,7 +172,7 @@ struct TrackTimeOrdering
 {
 	bool operator() ( const MCTrack& lhs, const MCTrack& rhs )
 	{
-		return lhs.GetLastMCTrackStep->GetGlobalTime() < rhs.GetLastMCTrackStep->GetGlobalTime();
+		return (lhs.GetLastMCTrackStep)->GetGlobalTime() < (rhs.GetLastMCTrackStep)->GetGlobalTime();
 	}
 }
 
@@ -181,17 +181,26 @@ MCTrack JoinMCTracks(std::vector<MCTrack> theTrackList)
 	//Build a time ordered set of tracks.
 	std::set<MCTrack,TrackTimeOrdering> TOTracks(theTrackList.begin(),theTrackList.end());
 	
-	//Now create a new track that we will fill with all of the old steps.
-	MCTrack theJoinedTrack;
-	
-	//The first track in the set is by definition the earliest, so we will set
-	//the trackID of this guy to be the trackID of the first member of the
-	//set.
-	theJoinedTrack.SetTrackID(TOTracks.begin()->GetTrackID());
+	//Now create a new track that we will fill with all of the old steps.  We
+	//can use a copy of the first track to get started.
+	MCTrack theJoinedTrack = TOTracks.begin();
 	
 	//Now just iterate over all members of the set and fill the new track with
 	//the old steps.
+	typedef std::set<MCTrack,TrackTimeOrdering>::iterator setIt;
+	//Get an iterator to the beginning of the TOTracks and move it forward one
+	//step past the very first.
+	setIt TOTracksIterator = TOTracks.begin();
+	TOTracksIterator++;
 	
+	while ( TOTracksIterator != TOTracks.end() )
+	{
+		for ( unsigned i = 0; i < *TOTracksIterator.GetMCTrackStepCount(); i++ )
+		{
+			*theJoinedTrack.AddNewMCTrackStep() = *TOTracksIterator.GetMCTrackStep(i); 
+		}
+		TOTracksIterator++;
+	}
 	
 	return theJoinedTrack;
 }
