@@ -170,19 +170,19 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 //occurred before track B, and therefore belongs before it.
 struct TrackTimeOrdering
 {
-	bool operator() ( const MCTrack& lhs, const MCTrack& rhs )
+	bool operator() ( const RAT::DS::MCTrack& lhs, const RAT::DS::MCTrack& rhs )
 	{
-		return lhs.GetLastMCTrackStep->GetGlobalTime() < rhs.GetLastMCTrackStep->GetGlobalTime();
+		return lhs.GetLastMCTrackStep()->GetGlobalTime() < rhs.GetLastMCTrackStep()->GetGlobalTime();
 	}
-}
+};
 
-MCTrack JoinMCTracks(std::vector<MCTrack> theTrackList)
+RAT::DS::MCTrack JoinMCTracks(std::vector<RAT::DS::MCTrack> theTrackList)
 {
 	//Build a time ordered set of tracks.
-	std::set<MCTrack,TrackTimeOrdering> TOTracks(theTrackList.begin(),theTrackList.end());
+	std::set<RAT::DS::MCTrack,TrackTimeOrdering> TOTracks(theTrackList.begin(),theTrackList.end());
 	
 	//Now create a new track that we will fill with all of the old steps.
-	MCTrack theJoinedTrack;
+	RAT::DS::MCTrack theJoinedTrack;
 	
 	//The first track in the set is by definition the earliest, so we will set
 	//the trackID of this guy to be the trackID of the first member of the

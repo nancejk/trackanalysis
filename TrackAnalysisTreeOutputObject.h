@@ -9,6 +9,7 @@
 
 #include <queue>
 #include <numeric>
+#include <set>
 #include <TTree.h>
 #include "RAT/DSReader.hh"
 #include "RAT/DS/Root.hh"
@@ -49,4 +50,4 @@ struct TrackedOpticalPhoton
 void ClearTrackedPhoton(TrackedOpticalPhoton&);
 
 struct TrackTimeOrdering;
-MCTrack JoinMCTracks(std::vector<MCTrack>);
+RAT::DS::MCTrack JoinMCTracks(std::vector<RAT::DS::MCTrack>);
