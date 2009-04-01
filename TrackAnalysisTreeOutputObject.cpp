@@ -55,8 +55,8 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 		//At this point we should already know that the event is good (i.e. actually contains track data).
 		//Now instead of using the TrackNav and TrackCursor, we build two objects. One is a queue containing
 		//MCTracks, and the other is a boolean vector that will contain information about the 'real' hits.
-		std::dequeue<RAT::DS::MCTrack> tracks;
-		//The way this object works is simple.  Each of its positions corresponds to a trackID.  If the trackID
+		std::deque<RAT::DS::MCTrack> tracks;
+		//The waythis object works is simple.  Each of its positions corresponds to a trackID.  If the trackID
 		//in question is one that is known to have caused a photoelectron to be generated in a tube, then
 		//known_hits[trackID] is true.  Otherwise it is false.  This provides a very fast and easy way to check
 		//if a trackID is responsible for a hit in the monte carlo.
