@@ -47,3 +47,6 @@ struct TrackedOpticalPhoton
 };
 
 void ClearTrackedPhoton(TrackedOpticalPhoton&);
+
+struct TrackTimeOrdering;
+MCTrack JoinMCTracks(std::vector<MCTrack>);
