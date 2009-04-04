@@ -282,7 +282,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			//Search for the ID of the parent track in the map.  If it is found,
 			//we have work to do.
 			IDtoTrackMap::iterator mall_guard = tracks.find( track_rit->second.GetParentID() );
-			if ( mall_guard != track_position.end() )
+			if ( mall_guard != tracks.end() )
 			{
 				//Create a vector of the tracks that are related, and start looking
 				//to see if they have parents of their own.
@@ -290,8 +290,8 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				estranged_tracks.push_back( mall_guard->second );
 				estranged_tracks.push_back( track_rit->second );
 				
-				mall_guard = track_position.find( mall_guard->second.GetParentID() );
-				while ( mall_guard != track_position.end() )
+				mall_guard = tracks.find( mall_guard->second.GetParentID() );
+				while ( mall_guard != tracks.end() )
 				{
 					estranged_tracks.push_back( mall_guard->second );
 					mall_guard = tracks.find( mall_guard->second.GetParentID() );
