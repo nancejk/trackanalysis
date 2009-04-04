@@ -323,15 +323,15 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 		std::cout << "----------CORRECTED TRACKS FOLLOW----------" << std::endl;
 		while ( track_it != tracks.end() )
 		{
-			std::cout << "Track ID " << track_it->GetTrackID() << "->Child of track ID " << track_it->GetParentID() << "\n";
-			for ( std::size_t stepcount = 0; stepcount < track_it->GetMCTrackStepCount(); stepcount++ )
+			std::cout << "Track ID " << track_it->second.GetTrackID() << "->Child of track ID " << track_it->second.GetParentID() << "\n";
+			for ( std::size_t stepcount = 0; stepcount < track_it->second.GetMCTrackStepCount(); stepcount++ )
 			{
-				std::cout << "\t Step " << stepcount << "->" << track_it->GetMCTrackStep(stepcount)->GetProcess() << "\n" 
-				<< "\t\t X:" << track_it->GetMCTrackStep(stepcount)->GetEndpoint().X() << "\n"
-				<< "\t\t Y:" << track_it->GetMCTrackStep(stepcount)->GetEndpoint().Y() << "\n"
-				<< "\t\t Z:" << track_it->GetMCTrackStep(stepcount)->GetEndpoint().Z() << "\n"
-				<< "\t\t T:" << track_it->GetMCTrackStep(stepcount)->GetGlobalTime() <<   "\n"
-				<< "\t\t KE:" << track_it->GetMCTrackStep(stepcount)->GetKE() << std::endl;
+				std::cout << "\t Step " << stepcount << "->" << track_it->second.GetMCTrackStep(stepcount)->GetProcess() << "\n" 
+				<< "\t\t X:" << track_it->second.GetMCTrackStep(stepcount)->GetEndpoint().X() << "\n"
+				<< "\t\t Y:" << track_it->second.GetMCTrackStep(stepcount)->GetEndpoint().Y() << "\n"
+				<< "\t\t Z:" << track_it->second.GetMCTrackStep(stepcount)->GetEndpoint().Z() << "\n"
+				<< "\t\t T:" << track_it->second.GetMCTrackStep(stepcount)->GetGlobalTime() <<   "\n"
+				<< "\t\t KE:" << track_it->second.GetMCTrackStep(stepcount)->GetKE() << std::endl;
 			}
 			//Remember to increment the iterator!
 			track_it++;
