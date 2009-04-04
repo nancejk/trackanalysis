@@ -308,6 +308,18 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				//the JoinMCTracks function.  For now, just stick it on the end
 				//of the tracks we've already made.
 				tracks.push_back(JoinMCTracks(estranged_tracks));
+				
+				//Now here's the trick.  The original tracks need to be 
+				//__removed__ from the track listing.  Otherwise, when we step
+				//to the next track, we are going to have issues due to the 
+				//fact that they are tracks in the chain.  Of course, this is
+				//fine, because we have retained all of the information they
+				//had anyhow.
+				std::vector<RAT::DS::MCTrack>::iterator est_it = estranged_tracks.begin();
+				while ( est_it != estranged_tracks.end() )
+				{
+					tracks.erase( track_position.find(est_it->GetTrackID())->second );
+				}
 			}
 			track_rit++;
 		}
