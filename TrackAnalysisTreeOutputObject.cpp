@@ -232,12 +232,13 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 		//Spit out Event Info...
 		std::cout << "Analyzing event " << eventIndex << std::endl;
 		
-		//Our container for the track themselves.  I am using a deque instead
-		//of a vector because the vast majority of elements will get pushed
-		//onto the front and back, and this structure is way more efficient
-		//doing that.
-		typedef std::deque<RAT::DS::MCTrack> trackdeque;
-		trackdeque tracks;
+		//The container will be a map, where the key is the trackID and the 
+		//value is the track itself.  This structure is _very_ useful for 
+		//track reconstruction, where you want to be able to get a track by
+		//referring to its id.
+		typedef std::map<unsigned,RAT::DS::MCTrack> IDtoTrackMap;
+		typedef std::pair<unsigned,RAT::DS::MCTrack> IDwithTrack;
+		trackmap tracks;
 		
 		//Now fill the deque with the tracks.
 		for ( std::size_t track = 0; track < theDSMC->GetMCTrackCount(); track++ )
@@ -245,66 +246,55 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			//Check if the track is an optical photon.
 			if ( theDSMC->GetMCTrack(track)->GetParticleName() == "opticalphoton" )
 			{
-				//Push a reference to it onto the deque.
-				tracks.push_back(*theDSMC->GetMCTrack(track));
+				//Grab the track out of the monte carlo and push it into the map
+				//with its ID.
+				MCTrack newTrack = theDSMC->GetMCTrack(track);
+				tracks.insert( newTrack.GetTrackID(), newTrack );
 			}
 		}
 		
-		//Now that our deque is full of tracks, let's iterate over them and
+		//Now that our map is full of tracks, let's iterate over them and
 		//print out their information.  This is, of course, pre-joining.
-		trackdeque::iterator track_it = tracks.begin();
+		IDtoTrackMap::iterator track_it = tracks.begin();
 		while ( track_it != tracks.end() )
 		{
-			std::cout << "Track ID " << track_it->GetTrackID() << "->Child of track ID " << track_it->GetParentID() << "\n";
-			for ( std::size_t stepcount = 0; stepcount < track_it->GetMCTrackStepCount(); stepcount++ )
+			std::cout << "Track ID " << track_it->first << "->Child of track ID " << track_it->second.GetParentID() << "\n";
+			for ( std::size_t stepcount = 0; stepcount < track_it->second.GetMCTrackStepCount(); stepcount++ )
 			{
-				std::cout << "\t Step " << stepcount << "->" << track_it->GetMCTrackStep(stepcount)->GetProcess() << "\n" 
-					  << "\t\t X:" << track_it->GetMCTrackStep(stepcount)->GetEndpoint().X() << "\n"
-					  << "\t\t Y:" << track_it->GetMCTrackStep(stepcount)->GetEndpoint().Y() << "\n"
-					  << "\t\t Z:" << track_it->GetMCTrackStep(stepcount)->GetEndpoint().Z() << "\n"
-					  << "\t\t T:" << track_it->GetMCTrackStep(stepcount)->GetGlobalTime() <<   "\n"
-					  << "\t\t KE:" << track_it->GetMCTrackStep(stepcount)->GetKE() << std::endl;
+				std::cout << "\t Step " << stepcount << "->" << track_it->second.GetMCTrackStep(stepcount)->GetProcess() << "\n" 
+					  << "\t\t X:" << track_it->second.GetMCTrackStep(stepcount)->GetEndpoint().X() << "\n"
+					  << "\t\t Y:" << track_it->second.GetMCTrackStep(stepcount)->GetEndpoint().Y() << "\n"
+					  << "\t\t Z:" << track_it->second.GetMCTrackStep(stepcount)->GetEndpoint().Z() << "\n"
+					  << "\t\t T:" << track_it->second.GetMCTrackStep(stepcount)->GetGlobalTime() <<   "\n"
+					  << "\t\t KE:" << track_it->second.GetMCTrackStep(stepcount)->GetKE() << std::endl;
 			}
 			//Remember to increment the iterator!
 			track_it++;
 		}
 		
-		//OK, now the hard work.  We need to join these damn tracks.  This map will
-		//map between trackID and a std::size_t which corresponds to the position
-		//of the track in the trackdeque.
-		typedef std::map<unsigned,size_t> IDtoLocMap;
-		typedef std::pair<unsigned,std::size_t> IDLocPair;
-		IDtoLocMap track_position;
-		for ( std::size_t dequepos = 0; dequepos < tracks.size(); dequepos++ )
-		{
-			//Implicitly construct a pair with the proper tags and insert it into
-			//the map.
-			track_position.insert( IDLocPair(tracks[dequepos].GetTrackID(),dequepos ) );
-		}
-		
-		//Now we can look up a track by its ID.  So start looking through the tracks
-		//for tracks that have parents, and see if they are in the map.  If they
-		//are, that means that they were born from an optical photon, so we care.
-		//Start from the back and go towards the front.
-		trackdeque::reverse_iterator track_rit = tracks.rbegin();
+		//OK, now the hard work.  We need to join these damn tracks.  Use a 
+		//reverse iterator to move back through the tracks and look for child-
+		//parent relationships.  This will simplify the logic of removing tracks 
+		//from the map that 'belong' to some parent.
+		IDtoTrackMap::reverse_iterator track_rit = tracks.rbegin();
 		while ( track_rit != tracks.rend() )
 		{
 			//Search for the ID of the parent track in the map.  If it is found,
 			//we have work to do.
-			IDtoLocMap::iterator mall_guard = track_position.find( track_rit->GetParentID() );
+			IDtoTrackMap::iterator mall_guard = tracks.find( track_rit->second.GetParentID() );
 			if ( mall_guard != track_position.end() )
 			{
 				//Create a vector of the tracks that are related, and start looking
 				//to see if they have parents of their own.
 				std::vector<RAT::DS::MCTrack> estranged_tracks;
-				estranged_tracks.push_back(tracks[mall_guard->second]);
-				estranged_tracks.push_back(*track_rit);
+				estranged_tracks.push_back( mall_guard->second );
+				estranged_tracks.push_back( track_rit->second );
 				
-				mall_guard = track_position.find( tracks[mall_guard->second].GetParentID() );
+				mall_guard = track_position.find( mall_guard->second.GetParentID() );
 				while ( mall_guard != track_position.end() )
 				{
-					estranged_tracks.push_back(tracks[mall_guard->second]);
-					mall_guard = track_position.find( tracks[mall_guard->second].GetParentID() );
+					estranged_tracks.push_back( mall_guard->second );
+					mall_guard = tracks.find( mall_guard->second.GetParentID() );
 				}
 				
 				//Now we should have all of the parents.  Assemble them via
@@ -321,11 +311,10 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				std::vector<RAT::DS::MCTrack>::iterator est_it = estranged_tracks.begin();
 				while ( est_it != estranged_tracks.end() )
 				{
-					tracks.erase( track_position.find(est_it->GetTrackID())->second );
-					est_it++;
+					tracks.erase( tracks.find(est_it->GetTrackID())->second );
 				}
 			}
-			track_rit++;
+			track_rit--;
 		}
 		
 		//OK, now print them out again.
