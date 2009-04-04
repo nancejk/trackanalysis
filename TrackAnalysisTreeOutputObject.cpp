@@ -252,10 +252,10 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 		trackdeque::iterator track_it = tracks.begin();
 		while ( track_it != tracks.end() )
 		{
-			std::cout << "Track ID " << track_it->GetTrackID() << ":\n";
+			std::cout << "Track ID " << track_it->GetTrackID() << "->Child of track ID " << track_it->GetParentID() << "\n";
 			for ( std::size_t stepcount = 0; stepcount < track_it->GetMCTrackStepCount(); stepcount++ )
 			{
-				std::cout << "\t Step " << stepcount << "\n" 
+				std::cout << "\t Step " << stepcount << "->" << track_it->GetMCTrackStep(stepcount)->GetProcess() << "\n" 
 					  << "\t\t X:" << track_it->GetMCTrackStep(stepcount)->GetEndpoint().X() << "\n"
 					  << "\t\t Y:" << track_it->GetMCTrackStep(stepcount)->GetEndpoint().Y() << "\n"
 					  << "\t\t Z:" << track_it->GetMCTrackStep(stepcount)->GetEndpoint().Z() << "\n"
