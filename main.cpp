@@ -43,7 +43,7 @@ int main ( int argc, char * const argv[] )
 	assert ( theOutputFile.IsZombie() != true );
 		
 	//Since we passed the assert (hopefully), we can build a tree.
-	TTree* theTree = GrowPhotonTree(data);
+	TTree* theTree = GrowJoinedPhotonTree(data);
 	theOutputFile.Write();
 	
 	return 0;
