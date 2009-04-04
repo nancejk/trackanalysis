@@ -319,6 +319,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				while ( est_it != estranged_tracks.end() )
 				{
 					tracks.erase( track_position.find(est_it->GetTrackID())->second );
+					est_it++;
 				}
 			}
 			track_rit++;
