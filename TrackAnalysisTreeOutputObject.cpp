@@ -228,6 +228,9 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 		//Move to the next event.
 		theDSEvent = theDS.GetEvent(eventIndex);
 		theDSMC = theDSEvent->GetMC();
+
+		//Spit out Event Info...
+		std::cout << "Analyzing event " << eventIndex << std::endl;
 		
 		//Our container for the track themselves.  I am using a deque instead
 		//of a vector because the vast majority of elements will get pushed
