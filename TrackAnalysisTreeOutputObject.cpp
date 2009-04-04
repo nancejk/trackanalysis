@@ -220,146 +220,52 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 												  "TrackedOpticalPhotons",
 												  &thePhoton,
 												  "eventNo/i:parentID:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:defHit/b:indefHit:reemitted:cerenkov:scintillation");
-	//Typedef some long-winded objects that we want to use in the track
-	//analysis.
-	typedef std::map<unsigned,RAT::DS::MCTrack> TrackFromTrackIDMap;
-	typedef std::pair<unsigned,RAT::DS::MCTrack> IDAndTrack;
-	typedef std::vector<bool> DynamicBitset;
-	typedef std::vector<RAT::DS::MCTrack> TrackChain;	
-	
+	//All we are going to do, for starters, is get the tracks, print out the 
+	//steps, join the tracks, and print them out again.  Easy stuff.  This will
+	//also give an easy way to track where the code is going wrong (or right).
 	for ( int eventIndex = 0; eventIndex < theDS.GetTotal(); eventIndex++  )
 	{
 		//Move to the next event.
 		theDSEvent = theDS.GetEvent(eventIndex);
 		theDSMC = theDSEvent->GetMC();
-		//Now for future reference, the number of hits and tracks:
-		std::size_t num_hits = theDSMC->GetMCPMTCount();
-		std::size_t total_track_count = theDSMC->GetMCTrackCount();
 		
-		//Now we need to build a DynamicBitset that will keep track of which
-		//photons caused hits in the detectors.  This will be very important
-		//in the track joining step to get things right.  By default all bits
-		//are set to zero.
-		DynamicBitset known_hits(total_track_count,false);
+		//Our container for the track themselves.  I am using a deque instead
+		//of a vector because the vast majority of elements will get pushed
+		//onto the front and back, and this structure is way more efficient
+		//doing that.
+		typedef std::deque<RAT::DS::MCTrack> trackdeque;
+		trackdeque tracks;
 		
-		//This will let us dynamically keep track of the number of children
-		//a track has without knowing apriori how many optical photon tracks
-		//there are.  May save the trouble of iterating through all of the tracks
-		//again, but is O(ln(n)+n) complex.
-		std::multiset<unsigned> ChildCounter;
-		
-		//And here is our map full of tracks indexed by their trackID.
-		TrackFromTrackIDMap TrackFromTrackID;
-		
-		//Now we fill the map with the optical photon tracks, indexed by their
-		//trackID.  At the same time, we keep track of the number of children
-		//any one track has.
-		for ( std::size_t mc_track_index = 0; mc_track_index < total_track_count; mc_track_index++ )
-		{ 
-			if ( theDSMC->GetMCTrack(mc_track_index)->GetParticleName() == "opticalphoton" ) 
-			{ 
-				IDAndTrack thePair = IDAndTrack( theDSMC->GetMCTrack(mc_track_index)->GetTrackID(), *theDSMC->GetMCTrack(mc_track_index) );
-				TrackFromTrackID.insert(thePair);
-				ChildCounter.insert(thePair.first);
-			}
-		}
-
-		//Now we fix the vector up with the proper information about which tracks caused hits.
-                for ( std::size_t mc_pmt_hit = 0; mc_pmt_hit < num_hits; mc_pmt_hit++ )
-                {
-                        //Iterate through all MCPhotons, flipping the TrackID'th bit in the vector<bool>
-                        //to indicate a hit.
-                        for ( std::size_t mc_phot = 0; mc_phot < theDSMC->GetMCPMT(mc_pmt_hit)->GetMCPhotonCount(); mc_phot++ )
-                        {
-                                known_hits[ theDSMC->GetMCPMT(mc_pmt_hit)->GetMCPhoton(mc_phot)->GetTrackID() - 1 ].flip();
-                        }
-                }
-
-		//Now for the rough stuff.  The problem is that tracks may or may not be
-		//independent.  If a track is a child of another track, we lose the physics
-		//of the parent, which may be important.  This can also lead to nonsense
-		//such as photons being generated at the very edge of the detector.  To
-		//avoid such foolishness, we have to actually reconstruct the photons.  In
-		//practice every track is the parent of another, but if a photon is the parent
-		//of another photon, we can assume that something happened that we want to
-		//reconstruct.  There may be a smarter way to do this, but for now, brute force
-		//the problem by iterating through the map and look for tracks whose parent
-		//is another member of the map.  Best to start at the end.
-		TrackFromTrackIDMap::reverse_iterator mapIt = TrackFromTrackID.rbegin();
-		while ( mapIt != TrackFromTrackID.rend() )
+		//Now fill the deque with the tracks.
+		for ( std::size_t track = 0; track < theDSMC->GetMCTrackCount(); track++ )
 		{
-			//Check to see if the parentID is held in the map.  If it is, we need
-			//to do some work.
-			TrackFromTrackIDMap::iterator parentSearch = TrackFromTrackID.find( mapIt->second.GetParentID() );
-			if ( parentSearch != TrackFromTrackID.end() )
+			//Check if the track is an optical photon.
+			if ( theDSMC->GetMCTrack(track)->GetParticleName() == "opticalphoton" )
 			{
-				//This means that the track was the child of another photon.  We need
-				//to 'unwind' the processes that created this child.  In particular,
-				//we may have a chain of processes that ended with this photon.
-				//Form a vector of the steps in the chain.
-				TrackChain theTracks;
-				while ( parentSearch != TrackFromTrackID.end() )
-				{
-					theTracks.push_back(parentSearch->second);
-					parentSearch = TrackFromTrackID.find( theTracks.back().GetParentID() );
-				}
-				
-				//Now we have the TrackChain corresponding to the sequence of photon
-				//interactions that occurred in the detector.  The last element should
-				//have the lowest ID.  So check to see if that ID has more than one child.
-				//If it does, forget all of this ever happened.  If not, we want to delete
-				//the children out of the map, join the tracks, and add the result to the
-				//track map.
-				if ( ChildCounter.count( theTracks.back().GetParentID() ) == 1 )
-				{
-					//Get an iterator to the beginning of the tracks.
-					TrackChain::iterator chIt = theTracks.begin();
-					//To remember if any of the children caused a hit.
-					bool childHit(false);
-
-					while ( chIt != theTracks.end() )
-					{
-						//Delete the map entry corresponding to this child.
-						TrackFromTrackID.erase( TrackFromTrackID.find(chIt->GetTrackID()) );
-						//Now check to see if this child caused a hit.  If so,
-						//remember.
-						if ( known_hits[chIt->GetTrackID()] )
-						{
-							childHit = true;
-						}
-					}	
-
-					//OK, now join the tracks.
-					RAT::DS::MCTrack theNewTrack = JoinMCTracks(theTracks);
-					TrackFromTrackID.insert( IDAndTrack(theNewTrack.GetTrackID(),theNewTrack) );
-					//If any of the children caused hits, flip the bit corresponding to the hit in the
-					//vector.
-					if ( childHit && !known_hits[theNewTrack.GetTrackID()] ) known_hits[theNewTrack.GetTrackID()].flip();
-					//Done.
-				}
+				//Push a reference to it onto the deque.
+				tracks.push_back(*theDSMC->GetMCTrack(track));
 			}
-
-			mapIt++;
 		}
 		
-		//Now build a double ended queue of tracks based on the remnants of the map.
-		std::deque<RAT::DS::MCTrack> trackQ;
-	
-		//Now print some status information.
-               	std::cout << "In current event: \n"
-                                << "\t" << trackQ.size() << " optical photon tracks found\n"
-                                << "\t" << 100.0*static_cast<double>(trackQ.size())/static_cast<double>(total_track_count) << " percent of total.\n"
-                //Make sure that the number of confirmed hits as reported by MCPMTCount() and that
-                //we've recorded in the vector<bool> are actually the same.  std::accumulate can do a good job
-                //of this.
-                                << "\t" << num_hits << " hit PMTs; " << std::accumulate(known_hits.begin(), known_hits.end(), 0) << " individual hits recorded."
-                                << std::endl;
-
+		//Now that our deque is full of tracks, let's iterate over them and
+		//print out their information.
+		trackdeque::iterator track_it = tracks.begin();
+		while ( track_it != tracks.end() )
+		{
+			std::cout << "Track ID " << track_it->GetTrackID() << ":\n";
+			std::cout << "\t" << " X Y Z T KE \n";
+			for ( std::size_t stepcount = 0; stepcount < track_it->GetMCTrackStepCount(); stepcount++ )
+			{
+				std::cout << track_it->GetMCTrackStep(stepcount)->GetEndpoint.X() <<
+							track_it->GetMCTrackStep(stepcount)->GetEndpoint.Y() <<
+							track_it->GetMCTrackStep(stepcount)->GetEndpoint.Z() <<
+							track_it->GetMCTrackStep(stepcount)->GetGlobalTime() <<
+				track_it->GetMCTracKStep(stepcount)->GetKE() << std::endl;
+			}
+		}
 	}
-
-
 	
-	//Spit out the tree we generated.
+	//Now just return the tree we built.
 	return theResultingTree;
 }
 	
