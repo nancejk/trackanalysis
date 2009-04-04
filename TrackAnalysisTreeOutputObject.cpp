@@ -238,7 +238,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 		//referring to its id.
 		typedef std::map<unsigned,RAT::DS::MCTrack> IDtoTrackMap;
 		typedef std::pair<unsigned,RAT::DS::MCTrack> IDwithTrack;
-		trackmap tracks;
+		IDtoTrackMap tracks;
 		
 		//Now fill the deque with the tracks.
 		for ( std::size_t track = 0; track < theDSMC->GetMCTrackCount(); track++ )
@@ -248,8 +248,8 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			{
 				//Grab the track out of the monte carlo and push it into the map
 				//with its ID.
-				MCTrack newTrack = theDSMC->GetMCTrack(track);
-				tracks.insert( newTrack.GetTrackID(), newTrack );
+				RAT::DS::MCTrack newTrack = *theDSMC->GetMCTrack(track);
+				tracks.insert( IDwithTrack(newTrack.GetTrackID(), newTrack) );
 			}
 		}
 		
@@ -296,12 +296,6 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 					estranged_tracks.push_back( mall_guard->second );
 					mall_guard = tracks.find( mall_guard->second.GetParentID() );
 				}
-				
-				//Now we should have all of the parents.  Assemble them via
-				//the JoinMCTracks function.  For now, just stick it on the end
-				//of the tracks we've already made.
-				tracks.push_back(JoinMCTracks(estranged_tracks));
-				
 				//Now here's the trick.  The original tracks need to be 
 				//__removed__ from the track listing.  Otherwise, when we step
 				//to the next track, we are going to have issues due to the 
@@ -311,15 +305,21 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				std::vector<RAT::DS::MCTrack>::iterator est_it = estranged_tracks.begin();
 				while ( est_it != estranged_tracks.end() )
 				{
-					tracks.erase( tracks.find(est_it->GetTrackID())->second );
+					tracks.erase( tracks.find(est_it->GetTrackID())->first );
+					est_it++;
 				}
+				//Now we should have all of the parents.  Assemble them via
+				//the JoinMCTracks function.  For now, just stick it on the end
+				//of the tracks we've already made.
+				RAT::DS::MCTrack joined = JoinMCTracks(estranged_tracks);
+				tracks.insert( IDwithTrack(joined.GetTrackID(),joined) );
 			}
-			track_rit--;
+			track_rit++;
 		}
-		
 		//OK, now print them out again.
 		//Now that our deque is full of tracks, let's iterate over them and
 		//print out their information.  This is, of course, pre-joining.
+		track_it = tracks.begin();
 		std::cout << "----------CORRECTED TRACKS FOLLOW----------" << std::endl;
 		while ( track_it != tracks.end() )
 		{
