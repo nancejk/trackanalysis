@@ -253,15 +253,17 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 		while ( track_it != tracks.end() )
 		{
 			std::cout << "Track ID " << track_it->GetTrackID() << ":\n";
-			std::cout << "\t" << " X Y Z T KE \n";
 			for ( std::size_t stepcount = 0; stepcount < track_it->GetMCTrackStepCount(); stepcount++ )
 			{
-				std::cout << track_it->GetMCTrackStep(stepcount)->GetEndpoint().X() <<
-							track_it->GetMCTrackStep(stepcount)->GetEndpoint().Y() <<
-							track_it->GetMCTrackStep(stepcount)->GetEndpoint().Z() <<
-							track_it->GetMCTrackStep(stepcount)->GetGlobalTime() <<
-				track_it->GetMCTrackStep(stepcount)->GetKE() << std::endl;
+				std::cout << "\t Step " << stepcount << "\n" 
+					  << "\t\t X:" << track_it->GetMCTrackStep(stepcount)->GetEndpoint().X() << "\n"
+					  << "\t\t Y:" << track_it->GetMCTrackStep(stepcount)->GetEndpoint().Y() << "\n"
+					  << "\t\t Z:" << track_it->GetMCTrackStep(stepcount)->GetEndpoint().Z() << "\n"
+					  << "\t\t T:" << track_it->GetMCTrackStep(stepcount)->GetGlobalTime() <<   "\n"
+					  << "\t\t KE:" << track_it->GetMCTrackStep(stepcount)->GetKE() << std::endl;
 			}
+			//Remember to increment the iterator!
+			track_it++;
 		}
 	}
 	
