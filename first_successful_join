@@ -1,0 +1,136 @@
+Track ID 1->Child of track ID 0
+	 Step 0->start
+		 X:0
+		 Y:0
+		 Z:0
+		 T:0
+		 KE:4.13281e-06
+	 Step 1->Attenuation
+		 X:2.62638e-05
+		 Y:-2.30468e-05
+		 Z:4.15294e-05
+		 T:2.97331e-07
+		 KE:4.13281e-06
+Track ID 2->Child of track ID 1
+	 Step 0->Reemission
+		 X:2.62638e-05
+		 Y:-2.30468e-05
+		 Z:4.15294e-05
+		 T:2.26838
+		 KE:3.112e-06
+	 Step 1->Transportation
+		 X:2096.04
+		 Y:5566.78
+		 Z:-825.377
+		 T:32.9279
+		 KE:3.112e-06
+	 Step 2->Transportation
+		 X:2115.27
+		 Y:5617.85
+		 Z:-832.95
+		 T:33.2147
+		 KE:3.112e-06
+	 Step 3->Transportation
+		 X:2896.96
+		 Y:7693.91
+		 Z:-1140.76
+		 T:43.5752
+		 KE:3.112e-06
+	 Step 4->Transportation
+		 X:2904.17
+		 Y:7713.08
+		 Z:-1143.61
+		 T:43.6708
+		 KE:3.112e-06
+	 Step 5->Transportation
+		 X:2923.74
+		 Y:7765.04
+		 Z:-1151.31
+		 T:43.9302
+		 KE:3.112e-06
+	 Step 6->Transportation
+		 X:2923.74
+		 Y:7765.04
+		 Z:-1151.31
+		 T:43.9302
+		 KE:3.112e-06
+	 Step 7->Transportation
+		 X:2940.04
+		 Y:7798.04
+		 Z:-1130.05
+		 T:44.1268
+		 KE:3.112e-06
+	 Step 8->G4FastSimulationManagerProcess
+		 X:2941.53
+		 Y:7800.86
+		 Z:-1127.93
+		 T:44.1454
+		 KE:3.112e-06
+----------CORRECTED TRACKS FOLLOW----------
+Track ID 1->Child of track ID 0
+	 Step 0->start
+		 X:0
+		 Y:0
+		 Z:0
+		 T:0
+		 KE:4.13281e-06
+	 Step 1->Attenuation
+		 X:2.62638e-05
+		 Y:-2.30468e-05
+		 Z:4.15294e-05
+		 T:2.97331e-07
+		 KE:4.13281e-06
+	 Step 2->Reemission
+		 X:2.62638e-05
+		 Y:-2.30468e-05
+		 Z:4.15294e-05
+		 T:2.26838
+		 KE:3.112e-06
+	 Step 3->Transportation
+		 X:2096.04
+		 Y:5566.78
+		 Z:-825.377
+		 T:32.9279
+		 KE:3.112e-06
+	 Step 4->Transportation
+		 X:2115.27
+		 Y:5617.85
+		 Z:-832.95
+		 T:33.2147
+		 KE:3.112e-06
+	 Step 5->Transportation
+		 X:2896.96
+		 Y:7693.91
+		 Z:-1140.76
+		 T:43.5752
+		 KE:3.112e-06
+	 Step 6->Transportation
+		 X:2904.17
+		 Y:7713.08
+		 Z:-1143.61
+		 T:43.6708
+		 KE:3.112e-06
+	 Step 7->Transportation
+		 X:2923.74
+		 Y:7765.04
+		 Z:-1151.31
+		 T:43.9302
+		 KE:3.112e-06
+	 Step 8->Transportation
+		 X:2923.74
+		 Y:7765.04
+		 Z:-1151.31
+		 T:43.9302
+		 KE:3.112e-06
+	 Step 9->Transportation
+		 X:2940.04
+		 Y:7798.04
+		 Z:-1130.05
+		 T:44.1268
+		 KE:3.112e-06
+	 Step 10->G4FastSimulationManagerProcess
+		 X:2941.53
+		 Y:7800.86
+		 Z:-1127.93
+		 T:44.1454
+		 KE:3.112e-06
