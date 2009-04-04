@@ -256,11 +256,11 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			std::cout << "\t" << " X Y Z T KE \n";
 			for ( std::size_t stepcount = 0; stepcount < track_it->GetMCTrackStepCount(); stepcount++ )
 			{
-				std::cout << track_it->GetMCTrackStep(stepcount)->GetEndpoint.X() <<
-							track_it->GetMCTrackStep(stepcount)->GetEndpoint.Y() <<
-							track_it->GetMCTrackStep(stepcount)->GetEndpoint.Z() <<
+				std::cout << track_it->GetMCTrackStep(stepcount)->GetEndpoint().X() <<
+							track_it->GetMCTrackStep(stepcount)->GetEndpoint().Y() <<
+							track_it->GetMCTrackStep(stepcount)->GetEndpoint().Z() <<
 							track_it->GetMCTrackStep(stepcount)->GetGlobalTime() <<
-				track_it->GetMCTracKStep(stepcount)->GetKE() << std::endl;
+				track_it->GetMCTrackStep(stepcount)->GetKE() << std::endl;
 			}
 		}
 	}
