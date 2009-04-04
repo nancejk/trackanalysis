@@ -321,7 +321,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				std::vector<RAT::DS::MCTrack>::iterator est_it = estranged_tracks.begin();
 				while ( est_it != estranged_tracks.end() )
 				{
-					tracks.erase( track_position.find(est_it->GetTrackID())->second );
+					tracks.erase( tracks.begin() + track_position.find(est_it->GetTrackID())->second );
 				}
 			}
 			track_rit++;
