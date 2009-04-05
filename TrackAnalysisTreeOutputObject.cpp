@@ -345,7 +345,13 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 		
 		//Now the tracks that were split by reemissions etc have been rejoined.  We
 		//are therefore free to do the analysis on them.  Using the map iterator to
-		//jump through the tracks should be easiest and fastest.
+		//jump through the tracks should be easiest and fastest
+#ifndef PRINT_TRACK_DEBUG
+                //If the debug flag wasn't set, this iterator won't be in memory.
+                //So we declare it here.
+                IDtoTrackMap::iterator track_it;
+#endif
+
 		track_it = tracks.begin();
 		while ( track_it != tracks.end() )
 		{
@@ -364,6 +370,12 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			
 			//Increment the track iterator.
 			track_it++;
+		}
+
+		//We've done all of the necessary steps, so on to filling the tree and
+                //finishing the iteration.
+                theResultingTree->Fill();
+                ClearTrackedPhoton(thePhoton);
 	}
 		
 	//Now just return the tree we built.
