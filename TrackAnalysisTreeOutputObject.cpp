@@ -252,7 +252,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				tracks.insert( IDwithTrack(newTrack.GetTrackID(), newTrack) );
 			}
 		}
-		
+#ifdef PRINT_TRACK_DEBUG	
 		//Now that our map is full of tracks, let's iterate over them and
 		//print out their information.  This is, of course, pre-joining.
 		IDtoTrackMap::iterator track_it = tracks.begin();
@@ -271,7 +271,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			//Remember to increment the iterator!
 			track_it++;
 		}
-		
+#endif		
 		//OK, now the hard work.  We need to join these damn tracks.  Use a 
 		//reverse iterator to move back through the tracks and look for child-
 		//parent relationships.  This will simplify the logic of removing tracks 
