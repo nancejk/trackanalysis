@@ -342,6 +342,28 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			track_it++;
 		}
 #endif
+		
+		//Now the tracks that were split by reemissions etc have been rejoined.  We
+		//are therefore free to do the analysis on them.  Using the map iterator to
+		//jump through the tracks should be easiest and fastest.
+		track_it = tracks.begin();
+		while ( track_it != tracks.end() )
+		{
+			//First set the proper event index for this photon.
+			thePhoton.eventNo = eventIndex;
+			
+			//tracks.front() object is the track we are working with!  It is in no particular spatial or temporal
+			//order, but that is immaterial.
+			RAT::DS::MCTrack curTrack = track_it->second;
+			thePhoton.parentID = curTrack.GetParentID();
+					
+			//Do the things we need to do at the beginning of the track.
+			thePhoton.fGenerationTime = curTrack.GetMCTrackStep(0)->GetGlobalTime();
+			thePhoton.fGenerationRadius = curTrack.GetMCTrackStep(0)->GetEndpoint().Mag();
+			thePhoton.fGenerationEnergy = curTrack.GetMCTrackStep(0)->GetKE();
+			
+			//Increment the track iterator.
+			track_it++;
 	}
 		
 	//Now just return the tree we built.
