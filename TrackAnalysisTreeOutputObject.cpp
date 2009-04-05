@@ -347,9 +347,9 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 		//are therefore free to do the analysis on them.  Using the map iterator to
 		//jump through the tracks should be easiest and fastest
 #ifndef PRINT_TRACK_DEBUG
-                //If the debug flag wasn't set, this iterator won't be in memory.
-                //So we declare it here.
-                IDtoTrackMap::iterator track_it;
+		//If the debug flag wasn't set, this iterator won't be in memory.
+        //So we declare it here.
+        IDtoTrackMap::iterator track_it;
 #endif
 
 		track_it = tracks.begin();
@@ -368,14 +368,13 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			thePhoton.fGenerationRadius = curTrack.GetMCTrackStep(0)->GetEndpoint().Mag();
 			thePhoton.fGenerationEnergy = curTrack.GetMCTrackStep(0)->GetKE();
 			
-			//Increment the track iterator.
+			//We've done all of the necessary steps, so on to filling the tree and
+			//finishing the iteration.
+			theResultingTree->Fill();
+			ClearTrackedPhoton(thePhoton);
+			//To finish this iteration, just increment the map iterator.
 			track_it++;
 		}
-
-		//We've done all of the necessary steps, so on to filling the tree and
-                //finishing the iteration.
-                theResultingTree->Fill();
-                ClearTrackedPhoton(thePhoton);
 	}
 		
 	//Now just return the tree we built.
