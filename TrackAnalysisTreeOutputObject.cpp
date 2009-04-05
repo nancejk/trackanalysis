@@ -351,7 +351,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
         //So we declare it here.
         IDtoTrackMap::iterator track_it;
 #endif
-
+		std::cout << tracks.size() << " reconstructed tracks found." << std::endl;
 		track_it = tracks.begin();
 		while ( track_it != tracks.end() )
 		{
@@ -378,6 +378,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 	}
 		
 	//Now just return the tree we built.
+	theResultingTree->Print();
 	return theResultingTree;
 }
 	
