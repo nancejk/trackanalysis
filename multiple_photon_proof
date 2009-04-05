@@ -1,0 +1,366 @@
+Analyzing event 0
+Track ID 1->Child of track ID 0
+	 Step 0->start
+		 X:0
+		 Y:0
+		 Z:0
+		 T:0
+		 KE:4.13281e-06
+	 Step 1->Attenuation
+		 X:-0.000277335
+		 Y:0.000244463
+		 Z:-3.38276e-06
+		 T:2.02543e-06
+		 KE:4.13281e-06
+Track ID 2->Child of track ID 0
+	 Step 0->start
+		 X:0
+		 Y:0
+		 Z:0
+		 T:0
+		 KE:4.13281e-06
+	 Step 1->Attenuation
+		 X:0.000250051
+		 Y:0.000269954
+		 Z:-1.26609e-06
+		 T:2.01588e-06
+		 KE:4.13281e-06
+Track ID 3->Child of track ID 0
+	 Step 0->start
+		 X:0
+		 Y:0
+		 Z:0
+		 T:0
+		 KE:4.13281e-06
+	 Step 1->Attenuation
+		 X:-0.000102918
+		 Y:0.000112888
+		 Z:8.4328e-05
+		 T:9.55924e-07
+		 KE:4.13281e-06
+Track ID 4->Child of track ID 0
+	 Step 0->start
+		 X:0
+		 Y:0
+		 Z:0
+		 T:0
+		 KE:4.13281e-06
+	 Step 1->Attenuation
+		 X:1.24517e-05
+		 Y:0.000124832
+		 Z:-4.59308e-05
+		 T:7.31882e-07
+		 KE:4.13281e-06
+Track ID 5->Child of track ID 0
+	 Step 0->start
+		 X:0
+		 Y:0
+		 Z:0
+		 T:0
+		 KE:4.13281e-06
+	 Step 1->Attenuation
+		 X:-1.72745e-06
+		 Y:9.73356e-07
+		 Z:-1.89498e-06
+		 T:1.50256e-08
+		 KE:4.13281e-06
+Track ID 6->Child of track ID 5
+	 Step 0->Reemission
+		 X:-1.72745e-06
+		 Y:9.73356e-07
+		 Z:-1.89498e-06
+		 T:4.1639
+		 KE:3.24291e-06
+	 Step 1->Attenuation
+		 X:-83.4451
+		 Y:24.0854
+		 Z:-85.5503
+		 T:4.79066
+		 KE:3.24291e-06
+	 Step 2->Attenuation
+		 X:-1464.56
+		 Y:1369.99
+		 Z:2088.63
+		 T:19.732
+		 KE:3.24291e-06
+	 Step 3->Attenuation
+		 X:-1454.48
+		 Y:1554.41
+		 Z:2089.13
+		 T:20.6815
+		 KE:3.24291e-06
+Track ID 7->Child of track ID 4
+	 Step 0->Reemission
+		 X:1.24517e-05
+		 Y:0.000124832
+		 Z:-4.59308e-05
+		 T:9.86078
+		 KE:3.22106e-06
+	 Step 1->Attenuation
+		 X:-43.9519
+		 Y:-167.653
+		 Z:-212.14
+		 T:11.2675
+		 KE:3.22106e-06
+	 Step 2->Attenuation
+		 X:-34.6909
+		 Y:-161.55
+		 Z:-198.558
+		 T:11.3576
+		 KE:3.22106e-06
+Track ID 8->Child of track ID 3
+	 Step 0->Reemission
+		 X:-0.000102918
+		 Y:0.000112888
+		 Z:8.4328e-05
+		 T:60.0596
+		 KE:3.4824e-06
+	 Step 1->Attenuation
+		 X:58.6216
+		 Y:178.13
+		 Z:-29.5801
+		 T:61.0483
+		 KE:3.4824e-06
+Track ID 9->Child of track ID 8
+	 Step 0->Reemission
+		 X:58.6216
+		 Y:178.13
+		 Z:-29.5801
+		 T:63.0863
+		 KE:3.39898e-06
+	 Step 1->Transportation
+		 X:-615.199
+		 Y:-2137.19
+		 Z:5578.31
+		 T:94.7342
+		 KE:3.39898e-06
+	 Step 2->Transportation
+		 X:-621.27
+		 Y:-2158.06
+		 Z:5628.97
+		 T:95.0241
+		 KE:3.39898e-06
+	 Step 3->Transportation
+		 X:-870.086
+		 Y:-3012.27
+		 Z:7685
+		 T:105.48
+		 KE:3.39898e-06
+	 Step 4->Transportation
+		 X:-875.607
+		 Y:-3031.22
+		 Z:7730.62
+		 T:105.712
+		 KE:3.39898e-06
+	 Step 5->G4FastSimulationManagerProcess
+		 X:-875.82
+		 Y:-3032.57
+		 Z:7733.96
+		 T:105.73
+		 KE:3.39898e-06
+Track ID 10->Child of track ID 2
+	 Step 0->Reemission
+		 X:0.000250051
+		 Y:0.000269954
+		 Z:-1.26609e-06
+		 T:37.4334
+		 KE:2.44668e-06
+	 Step 1->Attenuation
+		 X:-4397.25
+		 Y:-228.055
+		 Z:2376.72
+		 T:62.2324
+		 KE:2.44668e-06
+Track ID 11->Child of track ID 1
+	 Step 0->Reemission
+		 X:-0.000277335
+		 Y:0.000244463
+		 Z:-3.38276e-06
+		 T:5.31399
+		 KE:2.69225e-06
+	 Step 1->Transportation
+		 X:-667.342
+		 Y:295.897
+		 Z:7439.73
+		 T:42.7009
+		 KE:2.69225e-06
+----------CORRECTED TRACKS FOLLOW----------
+Track ID 1->Child of track ID 0
+	 Step 0->start
+		 X:0
+		 Y:0
+		 Z:0
+		 T:0
+		 KE:4.13281e-06
+	 Step 1->Attenuation
+		 X:-0.000277335
+		 Y:0.000244463
+		 Z:-3.38276e-06
+		 T:2.02543e-06
+		 KE:4.13281e-06
+	 Step 2->Reemission
+		 X:-0.000277335
+		 Y:0.000244463
+		 Z:-3.38276e-06
+		 T:5.31399
+		 KE:2.69225e-06
+	 Step 3->Transportation
+		 X:-667.342
+		 Y:295.897
+		 Z:7439.73
+		 T:42.7009
+		 KE:2.69225e-06
+Track ID 2->Child of track ID 0
+	 Step 0->start
+		 X:0
+		 Y:0
+		 Z:0
+		 T:0
+		 KE:4.13281e-06
+	 Step 1->Attenuation
+		 X:0.000250051
+		 Y:0.000269954
+		 Z:-1.26609e-06
+		 T:2.01588e-06
+		 KE:4.13281e-06
+	 Step 2->Reemission
+		 X:0.000250051
+		 Y:0.000269954
+		 Z:-1.26609e-06
+		 T:37.4334
+		 KE:2.44668e-06
+	 Step 3->Attenuation
+		 X:-4397.25
+		 Y:-228.055
+		 Z:2376.72
+		 T:62.2324
+		 KE:2.44668e-06
+Track ID 3->Child of track ID 0
+	 Step 0->start
+		 X:0
+		 Y:0
+		 Z:0
+		 T:0
+		 KE:4.13281e-06
+	 Step 1->Attenuation
+		 X:-0.000102918
+		 Y:0.000112888
+		 Z:8.4328e-05
+		 T:9.55924e-07
+		 KE:4.13281e-06
+	 Step 2->Reemission
+		 X:-0.000102918
+		 Y:0.000112888
+		 Z:8.4328e-05
+		 T:60.0596
+		 KE:3.4824e-06
+	 Step 3->Attenuation
+		 X:58.6216
+		 Y:178.13
+		 Z:-29.5801
+		 T:61.0483
+		 KE:3.4824e-06
+	 Step 4->Reemission
+		 X:58.6216
+		 Y:178.13
+		 Z:-29.5801
+		 T:63.0863
+		 KE:3.39898e-06
+	 Step 5->Transportation
+		 X:-615.199
+		 Y:-2137.19
+		 Z:5578.31
+		 T:94.7342
+		 KE:3.39898e-06
+	 Step 6->Transportation
+		 X:-621.27
+		 Y:-2158.06
+		 Z:5628.97
+		 T:95.0241
+		 KE:3.39898e-06
+	 Step 7->Transportation
+		 X:-870.086
+		 Y:-3012.27
+		 Z:7685
+		 T:105.48
+		 KE:3.39898e-06
+	 Step 8->Transportation
+		 X:-875.607
+		 Y:-3031.22
+		 Z:7730.62
+		 T:105.712
+		 KE:3.39898e-06
+	 Step 9->G4FastSimulationManagerProcess
+		 X:-875.82
+		 Y:-3032.57
+		 Z:7733.96
+		 T:105.73
+		 KE:3.39898e-06
+Track ID 4->Child of track ID 0
+	 Step 0->start
+		 X:0
+		 Y:0
+		 Z:0
+		 T:0
+		 KE:4.13281e-06
+	 Step 1->Attenuation
+		 X:1.24517e-05
+		 Y:0.000124832
+		 Z:-4.59308e-05
+		 T:7.31882e-07
+		 KE:4.13281e-06
+	 Step 2->Reemission
+		 X:1.24517e-05
+		 Y:0.000124832
+		 Z:-4.59308e-05
+		 T:9.86078
+		 KE:3.22106e-06
+	 Step 3->Attenuation
+		 X:-43.9519
+		 Y:-167.653
+		 Z:-212.14
+		 T:11.2675
+		 KE:3.22106e-06
+	 Step 4->Attenuation
+		 X:-34.6909
+		 Y:-161.55
+		 Z:-198.558
+		 T:11.3576
+		 KE:3.22106e-06
+Track ID 5->Child of track ID 0
+	 Step 0->start
+		 X:0
+		 Y:0
+		 Z:0
+		 T:0
+		 KE:4.13281e-06
+	 Step 1->Attenuation
+		 X:-1.72745e-06
+		 Y:9.73356e-07
+		 Z:-1.89498e-06
+		 T:1.50256e-08
+		 KE:4.13281e-06
+	 Step 2->Reemission
+		 X:-1.72745e-06
+		 Y:9.73356e-07
+		 Z:-1.89498e-06
+		 T:4.1639
+		 KE:3.24291e-06
+	 Step 3->Attenuation
+		 X:-83.4451
+		 Y:24.0854
+		 Z:-85.5503
+		 T:4.79066
+		 KE:3.24291e-06
+	 Step 4->Attenuation
+		 X:-1464.56
+		 Y:1369.99
+		 Z:2088.63
+		 T:19.732
+		 KE:3.24291e-06
+	 Step 5->Attenuation
+		 X:-1454.48
+		 Y:1554.41
+		 Z:2089.13
+		 T:20.6815
+		 KE:3.24291e-06

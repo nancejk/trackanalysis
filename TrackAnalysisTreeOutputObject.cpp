@@ -313,8 +313,12 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				//of the tracks we've already made.
 				RAT::DS::MCTrack joined = JoinMCTracks(estranged_tracks);
 				tracks.insert( IDwithTrack(joined.GetTrackID(),joined) );
+
+				//Now the iterator needs to be reset, because we've deleted elements
+				//from the map.
+				track_rit = tracks.rbegin();
 			}
-			track_rit++;
+			else track_rit++;
 		}
 		//OK, now print them out again.
 		//Now that our deque is full of tracks, let's iterate over them and
