@@ -315,14 +315,15 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				tracks.insert( IDwithTrack(joined.GetTrackID(),joined) );
 
 				//Now the iterator needs to be reset, because we've deleted elements
-				//from the map.
+				//from the map, which _should_ invalidate the pointer, but it 
+				//doesn't because find() returns a forward iterator.
 				track_rit = tracks.rbegin();
 			}
 			else track_rit++;
 		}
-		//OK, now print them out again.
-		//Now that our deque is full of tracks, let's iterate over them and
-		//print out their information.  This is, of course, pre-joining.
+		
+#ifdef PRINT_TRACK_DEBUG
+		//Post-joined info.
 		track_it = tracks.begin();
 		std::cout << "----------CORRECTED TRACKS FOLLOW----------" << std::endl;
 		while ( track_it != tracks.end() )
@@ -340,9 +341,8 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			//Remember to increment the iterator!
 			track_it++;
 		}
-		
+#endif
 	}
-	
 		
 	//Now just return the tree we built.
 	return theResultingTree;
