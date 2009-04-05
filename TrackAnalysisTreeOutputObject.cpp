@@ -279,6 +279,11 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 		IDtoTrackMap::reverse_iterator track_rit = tracks.rbegin();
 		while ( track_rit != tracks.rend() )
 		{
+			//If we erase elements of the map, the iterator will become invalid.  So,
+			//this flag will alert the loop to the condition that the map iterator has
+			//been invalidated, and needs to be redone.
+			bool resetIterator(false);
+			
 			//Search for the ID of the parent track in the map.  If it is found,
 			//we have work to do.
 			IDtoTrackMap::iterator mall_guard = tracks.find( track_rit->second.GetParentID() );
@@ -314,7 +319,9 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 					tracks.erase( tracks.find(est_it->GetTrackID())->second );
 				}
 			}
-			track_rit--;
+			
+			if ( resetIterator ) track_rit = tracks.rbegin();
+			else track_rit--;
 		}
 		
 		//OK, now print them out again.
