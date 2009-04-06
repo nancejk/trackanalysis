@@ -345,7 +345,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				
 				//If the ChildHit bit is flipped, make sure that the trackID of
 				//the new joined track gets set.
-				if ( ChildHit ) hit_list[ joined.GetTrackID() ].flip();
+				if ( ChildHit ) hit_list[ joined.GetTrackID() - 1 ].flip();
 
 				//Now the iterator needs to be reset, because we've deleted elements
 				//from the map, which _should_ invalidate the pointer, but it 
