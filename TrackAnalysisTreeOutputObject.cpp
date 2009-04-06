@@ -327,8 +327,14 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				bool ChildHit(false);
 				while ( est_it != estranged_tracks.end() )
 				{
-					if ( hit_list[est_it->GetTrackID() - 1] ) ChildHit = true;
-					tracks.erase( tracks.find(est_it->GetTrackID())->first );
+					unsigned theChildID = est_it->GetTrackID();
+					if ( hit_list[theChildID - 1] ) 
+					{
+						//Mark the flag and unset the hitlist for the child.
+						ChildHit = true;
+						hit_list[theChildID - 1].flip();
+					}
+					tracks.erase( tracks.find(theChildID)->first );
 					est_it++;
 				}
 				//Now we should have all of the parents.  Assemble them via
