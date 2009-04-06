@@ -21,6 +21,7 @@ void ClearTrackedPhoton(TrackedOpticalPhoton& thePhoton)
 	thePhoton.fGenerationEnergy = 0;
 	thePhoton.fPMTHitTime = 0;
 	thePhoton.fPMTHitEnergy = 0;
+	thePhoton.reemissions = 0;
 	thePhoton.defHit = false;
 	thePhoton.indefHit = false;
 	thePhoton.reemitted = false;
@@ -40,7 +41,7 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 	TBranch* theBranch = theResultingTree->Branch(
 				"TrackedOpticalPhotons",
 			  	&thePhoton,
-				"eventNo/i:parentID:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:defHit/b:indefHit:reemitted:cerenkov:scintillation");
+				"eventNo/i:parentID:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:reemissions/i:defHit/b:indefHit:reemitted:cerenkov:scintillation");
 
 	for ( int eventIndex = 0; eventIndex < theDS.GetTotal(); eventIndex++  )
 	{
@@ -375,6 +376,31 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			thePhoton.fGenerationTime = curTrack.GetMCTrackStep(0)->GetGlobalTime();
 			thePhoton.fGenerationRadius = curTrack.GetMCTrackStep(0)->GetEndpoint().Mag();
 			thePhoton.fGenerationEnergy = curTrack.GetMCTrackStep(0)->GetKE();
+			
+			//Now onto the step checks.
+			for ( std::size_t step_index = 0; step_index < curTrack.GetMCTrackStepCount(); step_index++ )
+			{
+				//Get the current step and set the process variable.
+				RAT::DS::MCTrackStep curStep = *curTrack.GetMCTrackStep(step_index);
+				currentProcess = curStep.GetProcess();
+				
+				//Checks to see if the photon has been reemitted.  If so, mark it.  This doesn't
+				//actually do anything if the photon has already been marked as such.  This 
+				//conditional is short-circuited, so the second statement won't be checked unless
+				//the first is true.
+				if ( currentProcess == "Reemission" )
+				{ 
+					if ( thePhoton.reemitted == false ) thePhoton.reemitted = true; 
+					thePhoton.reemissions++;
+				}
+				
+				if ( ( currentProcess == "Scintillation" ) && ( thePhoton.scintillation == false ) )
+				{ thePhoton.scintillation = true; }
+				
+				//Checks to see if the photon is Cerenkov radiation.
+				if ( ( currentProcess == "Cerenkov" ) && ( thePhoton.cerenkov == false ) )
+				{ thePhoton.cerenkov = true; }
+			}
 			
 			//We've done all of the necessary steps, so on to filling the tree and
 			//finishing the iteration.
