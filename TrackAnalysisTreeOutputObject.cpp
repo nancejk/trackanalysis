@@ -377,8 +377,10 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			//finishing the iteration.
 			theResultingTree->Fill();
 			ClearTrackedPhoton(thePhoton);
-			//To finish this iteration, just increment the map iterator.
+			//To finish this iteration, just increment the map iterator and
+			//the track counter.
 			track_it++;
+			track_index++;
 		}
 	}
 		
