@@ -260,7 +260,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 		}
 		
 		//And now for every hit in the monte carlo, flip the appropriate bit.
-		for ( std::size_t mc_pmt_hit = 0; mc_pmt_hit < num_hits; mc_pmt_hit++ )
+		for ( std::size_t mc_pmt_hit = 0; mc_pmt_hit < theDSMC->GetMCPMTCount(); mc_pmt_hit++ )
 		{
 			//Iterate through all MCPhotons, flipping the TrackID'th bit in the vector<bool>
 			//to indicate a hit.
