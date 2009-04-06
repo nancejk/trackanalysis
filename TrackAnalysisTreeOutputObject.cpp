@@ -353,8 +353,13 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 #endif
 		std::cout << tracks.size() << " reconstructed tracks found." << std::endl;
 		track_it = tracks.begin();
+		
+		//A counter so we can build in a progress indicator.
+		std::size_t track_index(0);
 		while ( track_it != tracks.end() )
 		{
+			std::cout << track_index << " of " << tracks.size() << " processed." << std::flush;
+			
 			//First set the proper event index for this photon.
 			thePhoton.eventNo = eventIndex;
 			
