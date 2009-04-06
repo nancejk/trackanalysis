@@ -320,10 +320,14 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				//to the next track, we are going to have issues due to the 
 				//fact that they are tracks in the chain.  Of course, this is
 				//fine, because we have retained all of the information they
-				//had anyhow.
+				//had anyhow.  While we are doing this, we want to check to see
+				//if any of the tracks caused hits in the monte carlo.  If they
+				//did, we need to flip the new bit in the hitlist.
 				std::vector<RAT::DS::MCTrack>::iterator est_it = estranged_tracks.begin();
+				bool ChildHit(false);
 				while ( est_it != estranged_tracks.end() )
 				{
+					if ( hit_list[est_it->GetTrackID()] ) ChildHit = true;
 					tracks.erase( tracks.find(est_it->GetTrackID())->first );
 					est_it++;
 				}
@@ -332,6 +336,10 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				//of the tracks we've already made.
 				RAT::DS::MCTrack joined = JoinMCTracks(estranged_tracks);
 				tracks.insert( IDwithTrack(joined.GetTrackID(),joined) );
+				
+				//If the ChildHit bit is flipped, make sure that the trackID of
+				//the new joined track gets set.
+				if ( ChildHit ) hit_list[ joined.GetTrackID() ].flip();
 
 				//Now the iterator needs to be reset, because we've deleted elements
 				//from the map, which _should_ invalidate the pointer, but it 
