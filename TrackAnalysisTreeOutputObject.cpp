@@ -427,6 +427,14 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				//Checks to see if the photon is Cerenkov radiation.
 				if ( ( currentProcess == "Cerenkov" ) && ( thePhoton.cerenkov == false ) )
 				{ thePhoton.cerenkov = true; }
+				
+				//This will check if the current step is involved in a process that can
+				//lead to a hit being recorded in the monte carlo.  It is no guarantee that
+				//it is actually a hit (a definite hit), as that is determined probabilistically at
+				//(simulation) runtime.  Therefore this is called an indefinite hit.  Not all 
+				//indefinite hits are definite hits, but all definite hits are indefinite hits.
+				if ( currentProcess.find("G4FastSimulationManagerProcess") != string::npos ) 
+				{ thePhoton.fPMTHitTime = curStep.GetGlobalTime(); thePhoton.fPMTHitEnergy = curStep.GetKE(); thePhoton.indefHit = true; }
 			}
 			
 			//We've done all of the necessary steps, so on to filling the tree and
