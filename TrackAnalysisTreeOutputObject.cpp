@@ -395,6 +395,8 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			//order, but that is immaterial.
 			RAT::DS::MCTrack curTrack = track_it->second;
 			thePhoton.parentID = curTrack.GetParentID();
+			//Now check the trackID against the list of known hits.
+			if ( known_hits[curTrack.GetTrackID() - 1] == true ) thePhoton.defHit = true;
 					
 			//Do the things we need to do at the beginning of the track.
 			thePhoton.fGenerationTime = curTrack.GetMCTrackStep(0)->GetGlobalTime();
