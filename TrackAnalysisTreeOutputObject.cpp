@@ -220,7 +220,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 	TBranch* theBranch = theResultingTree->Branch(
 												  "TrackedOpticalPhotons",
 												  &thePhoton,
-												  "eventNo/i:parentID:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:defHit/b:indefHit:reemitted:cerenkov:scintillation");
+												  "eventNo/i:parentID:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:reemissions/i:defHit/b:indefHit:reemitted:cerenkov:scintillation");
 	//All we are going to do, for starters, is get the tracks, print out the 
 	//steps, join the tracks, and print them out again.  Easy stuff.  This will
 	//also give an easy way to track where the code is going wrong (or right).
@@ -231,7 +231,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 		theDSMC = theDSEvent->GetMC();
 #ifndef CLUSTER_RUN
 		//Spit out Event Info...
-		std::cout << "Analyzing event " << eventIndex << std::endl;
+		std::cout << std::endl << "Analyzing event " << eventIndex << std::endl;
 #endif		
 		//The container will be a map, where the key is the trackID and the 
 		//value is the track itself.  This structure is _very_ useful for 
@@ -358,7 +358,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 		track_it = tracks.begin();
 		
 		//A counter so we can build in a progress indicator.
-		std::size_t track_index(0);
+		std::size_t track_index(1);
 		while ( track_it != tracks.end() )
 		{
 #ifndef CLUSTER_RUN
@@ -377,6 +377,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			thePhoton.fGenerationRadius = curTrack.GetMCTrackStep(0)->GetEndpoint().Mag();
 			thePhoton.fGenerationEnergy = curTrack.GetMCTrackStep(0)->GetKE();
 			
+			static std::string currentProcess("");
 			//Now onto the step checks.
 			for ( std::size_t step_index = 0; step_index < curTrack.GetMCTrackStepCount(); step_index++ )
 			{
