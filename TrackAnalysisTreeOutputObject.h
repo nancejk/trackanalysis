@@ -45,12 +45,14 @@ struct TrackedOpticalPhoton
 	float fGenerationEnergy;
 	float fPMTHitTime;
 	float fPMTHitEnergy;
+	float reflectionTime;
 	unsigned reemissions;
 	bool defHit;
 	bool indefHit;
 	bool reemitted;
 	bool cerenkov;
 	bool scintillation;
+	bool reflected;
 };
 
 void ClearTrackedPhoton(TrackedOpticalPhoton&);

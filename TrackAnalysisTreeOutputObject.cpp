@@ -21,12 +21,14 @@ void ClearTrackedPhoton(TrackedOpticalPhoton& thePhoton)
 	thePhoton.fGenerationEnergy = 0;
 	thePhoton.fPMTHitTime = 0;
 	thePhoton.fPMTHitEnergy = 0;
+	thePhoton.freflectionTime = 0;
 	thePhoton.reemissions = 0;
 	thePhoton.defHit = false;
 	thePhoton.indefHit = false;
 	thePhoton.reemitted = false;
 	thePhoton.cerenkov = false;	
 	thePhoton.scintillation = false;
+	thePhoton.reflected = false;
 }
 
 TTree* GrowPhotonTree( RAT::DSReader& theDS )
@@ -41,7 +43,7 @@ TTree* GrowPhotonTree( RAT::DSReader& theDS )
 	TBranch* theBranch = theResultingTree->Branch(
 				"TrackedOpticalPhotons",
 			  	&thePhoton,
-				"eventNo/i:parentID:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:reemissions/i:defHit/b:indefHit:reemitted:cerenkov:scintillation");
+				"eventNo/i:parentID:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:freflectionTime:reemissions/i:defHit/b:indefHit:reemitted:cerenkov:scintillation:reflected");
 
 	for ( int eventIndex = 0; eventIndex < theDS.GetTotal(); eventIndex++  )
 	{
@@ -220,7 +222,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 	TBranch* theBranch = theResultingTree->Branch(
 												  "TrackedOpticalPhotons",
 												  &thePhoton,
-												  "eventNo/i:parentID:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:reemissions/i:defHit/b:indefHit:reemitted:cerenkov:scintillation");
+												  "eventNo/i:parentID:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:freflectionTime:reemissions/i:defHit/b:indefHit:reemitted:cerenkov:scintillation:reflected");
 	//All we are going to do, for starters, is get the tracks, print out the 
 	//steps, join the tracks, and print them out again.  Easy stuff.  This will
 	//also give an easy way to track where the code is going wrong (or right).
