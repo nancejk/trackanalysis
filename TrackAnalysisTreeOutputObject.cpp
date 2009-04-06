@@ -228,10 +228,10 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 		//Move to the next event.
 		theDSEvent = theDS.GetEvent(eventIndex);
 		theDSMC = theDSEvent->GetMC();
-
+#ifndef CLUSTER_RUN
 		//Spit out Event Info...
 		std::cout << "Analyzing event " << eventIndex << std::endl;
-		
+#endif		
 		//The container will be a map, where the key is the trackID and the 
 		//value is the track itself.  This structure is _very_ useful for 
 		//track reconstruction, where you want to be able to get a track by
@@ -252,6 +252,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				tracks.insert( IDwithTrack(newTrack.GetTrackID(), newTrack) );
 			}
 		}
+#ifndef CLUSTER_RUN
 #ifdef PRINT_TRACK_DEBUG	
 		//Now that our map is full of tracks, let's iterate over them and
 		//print out their information.  This is, of course, pre-joining.
@@ -271,6 +272,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			//Remember to increment the iterator!
 			track_it++;
 		}
+#endif
 #endif		
 		//OK, now the hard work.  We need to join these damn tracks.  Use a 
 		//reverse iterator to move back through the tracks and look for child-
@@ -321,7 +323,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			}
 			else track_rit++;
 		}
-		
+#ifndef CLUSTER_RUN		
 #ifdef PRINT_TRACK_DEBUG
 		//Post-joined info.
 		track_it = tracks.begin();
@@ -342,7 +344,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			track_it++;
 		}
 #endif
-		
+#endif
 		//Now the tracks that were split by reemissions etc have been rejoined.  We
 		//are therefore free to do the analysis on them.  Using the map iterator to
 		//jump through the tracks should be easiest and fastest
@@ -358,8 +360,9 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 		std::size_t track_index(0);
 		while ( track_it != tracks.end() )
 		{
+#ifndef CLUSTER_RUN
 			std::cout << track_index << " of " << tracks.size() << " processed.\r" << std::flush;
-			
+#endif
 			//First set the proper event index for this photon.
 			thePhoton.eventNo = eventIndex;
 			
@@ -385,7 +388,9 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 	}
 		
 	//Now just return the tree we built.
+#ifndef CLUSTER_RUN
 	theResultingTree->Print();
+#endif
 	return theResultingTree;
 }
 	
