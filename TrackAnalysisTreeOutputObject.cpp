@@ -327,7 +327,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				bool ChildHit(false);
 				while ( est_it != estranged_tracks.end() )
 				{
-					if ( hit_list[est_it->GetTrackID()] ) ChildHit = true;
+					if ( hit_list[est_it->GetTrackID() - 1] ) ChildHit = true;
 					tracks.erase( tracks.find(est_it->GetTrackID())->first );
 					est_it++;
 				}
