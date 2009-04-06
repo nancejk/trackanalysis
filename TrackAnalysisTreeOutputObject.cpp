@@ -241,7 +241,12 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 		typedef std::pair<unsigned,RAT::DS::MCTrack> IDwithTrack;
 		IDtoTrackMap tracks;
 		
-		//Now fill the deque with the tracks.
+		//We also want to have a container that can tell us if a given track
+		//caused a hit in the simulation.  We use a vector<bool>, where the
+		//index is equal to the trackID.
+		std::vector<bool> hit_list( theDSMC->GetMCTrackCount(), false );
+		
+		//Now fill the map with the tracks.
 		for ( std::size_t track = 0; track < theDSMC->GetMCTrackCount(); track++ )
 		{
 			//Check if the track is an optical photon.
@@ -251,6 +256,17 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				//with its ID.
 				RAT::DS::MCTrack newTrack = *theDSMC->GetMCTrack(track);
 				tracks.insert( IDwithTrack(newTrack.GetTrackID(), newTrack) );
+			}
+		}
+		
+		//And now for every hit in the monte carlo, flip the appropriate bit.
+		for ( std::size_t mc_pmt_hit = 0; mc_pmt_hit < num_hits; mc_pmt_hit++ )
+		{
+			//Iterate through all MCPhotons, flipping the TrackID'th bit in the vector<bool>
+			//to indicate a hit.
+			for ( std::size_t mc_phot = 0; mc_phot < theDSMC->GetMCPMT(mc_pmt_hit)->GetMCPhotonCount(); mc_phot++ )
+			{	
+				hit_list[ theDSMC->GetMCPMT(mc_pmt_hit)->GetMCPhoton(mc_phot)->GetTrackID() - 1 ].flip();
 			}
 		}
 #ifndef CLUSTER_RUN
