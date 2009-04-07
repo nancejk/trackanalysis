@@ -411,7 +411,10 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			thePhoton.fGenerationRadius = curTrack.GetMCTrackStep(0)->GetEndpoint().Mag();
 			thePhoton.fGenerationEnergy = curTrack.GetMCTrackStep(0)->GetKE();
 			
+			//Boundary and process checking.
 			static std::string currentProcess("");
+			static bool LastStepEndedOnBoundary(false);
+			
 			//Now onto the step checks.
 			for ( std::size_t step_index = 0; step_index < curTrack.GetMCTrackStepCount(); step_index++ )
 			{
@@ -443,6 +446,12 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				//indefinite hits are definite hits, but all definite hits are indefinite hits.
 				if ( currentProcess.find("G4FastSimulationManagerProcess") != string::npos ) 
 				{ thePhoton.fPMTHitTime = curStep.GetGlobalTime(); thePhoton.fPMTHitEnergy = curStep.GetKE(); thePhoton.indefHit = true; }
+				
+				//If this step ended on a boundary, then the StepStatus will mark it as fGeomBoundary.
+				//During the next step, we can check if this flag was set, and if so, do reflection
+				//checking.  If it didn't, but the flag is set from the previous step, unset it.
+				if ( curStep.GetStepStatus() == "GeomBoundary") LastStepEndedOnBoundary = true;
+				else if ( LastStepEndedOnBoundary ) LastStepEndedOnBoundary = false;
 			}
 			
 			//We've done all of the necessary steps, so on to filling the tree and
