@@ -422,6 +422,24 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				RAT::DS::MCTrackStep curStep = *curTrack.GetMCTrackStep(step_index);
 				currentProcess = curStep.GetProcess();
 				
+				//If the last step ended on a boundary...
+				if ( LastStepEndedOnBoundary )
+				{
+					if ( curStep.GetStepStatus() == "GeomBoundary" ) 
+					{
+						thePhoton.reflected = true;
+						thePhoton.fReflectionTime = curStep.GetGlobalTime();
+					}
+				}
+				
+				//Checks to see if the photon is a Scintillation photon.
+				if ( ( currentProcess == "Scintillation" ) && ( thePhoton.scintillation == false ) )
+				{ thePhoton.scintillation = true; }
+				
+				//Checks to see if the photon is Cerenkov radiation.
+				if ( ( currentProcess == "Cerenkov" ) && ( thePhoton.cerenkov == false ) )
+				{ thePhoton.cerenkov = true; }
+				
 				//Checks to see if the photon has been reemitted.  If so, mark it.  This doesn't
 				//actually do anything if the photon has already been marked as such.  This 
 				//conditional is short-circuited, so the second statement won't be checked unless
@@ -431,13 +449,6 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 					if ( thePhoton.reemitted == false ) thePhoton.reemitted = true; 
 					thePhoton.reemissions++;
 				}
-				
-				if ( ( currentProcess == "Scintillation" ) && ( thePhoton.scintillation == false ) )
-				{ thePhoton.scintillation = true; }
-				
-				//Checks to see if the photon is Cerenkov radiation.
-				if ( ( currentProcess == "Cerenkov" ) && ( thePhoton.cerenkov == false ) )
-				{ thePhoton.cerenkov = true; }
 				
 				//This will check if the current step is involved in a process that can
 				//lead to a hit being recorded in the monte carlo.  It is no guarantee that
