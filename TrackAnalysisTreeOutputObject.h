@@ -46,6 +46,7 @@ struct TrackedOpticalPhoton
 	float fPMTHitTime;
 	float fPMTHitEnergy;
 	float fReflectionTime;
+	float fReflectionRadius;
 	unsigned reemissions;
 	bool defHit;
 	bool indefHit;
