@@ -22,6 +22,9 @@ void ClearTrackedPhoton(TrackedOpticalPhoton& thePhoton)
 	thePhoton.fPMTHitTime = 0;
 	thePhoton.fPMTHitEnergy = 0;
 	thePhoton.fReflectionTime = 0;
+	thePhoton.fReflectionX = 0;
+	thePhoton.fReflectionY = 0;
+	thePhoton.fReflectionZ = 0;
 	thePhoton.fReflectionRadius = 0;
 	thePhoton.reemissions = 0;
 	thePhoton.defHit = false;
@@ -223,7 +226,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 	TBranch* theBranch = theResultingTree->Branch(
 												  "TrackedOpticalPhotons",
 												  &thePhoton,
-												  "eventNo/i:parentID:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:fReflectionTime:fReflectionRadius:reemissions/i:defHit/b:indefHit:reemitted:cerenkov:scintillation:reflected");
+												  "eventNo/i:parentID:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:fReflectionTime:fReflectionX:fReflectionY:fReflectionZ:fReflectionRadius:reemissions/i:defHit/b:indefHit:reemitted:cerenkov:scintillation:reflected");
 	//All we are going to do, for starters, is get the tracks, print out the 
 	//steps, join the tracks, and print them out again.  Easy stuff.  This will
 	//also give an easy way to track where the code is going wrong (or right).
@@ -428,6 +431,9 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				{
 					if ( curStep.GetStepStatus() == "GeomBoundary" ) 
 					{
+						thePhoton.fReflectionX = curStep.GetEndpoint().X();
+						thePhoton.fReflectionY = curStep.GetEndpoint().Y();
+						thePhoton.fReflectionZ = curStep.GetEndpoint().Z();
 						thePhoton.fReflectionRadius = curStep.GetEndpoint().Mag();
 						thePhoton.reflected = true;
 						thePhoton.fReflectionTime = curStep.GetGlobalTime();
