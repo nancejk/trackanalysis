@@ -429,14 +429,18 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				//If the last step ended on a boundary...
 				if ( LastStepEndedOnBoundary )
 				{
+					//This will track the totally internally reflected photons.
+					//To actually capture the step that reflects, we need to get
+					//the last photon back!
 					if ( curStep.GetStepStatus() == "GeomBoundary" ) 
 					{
-						thePhoton.fReflectionX = curStep.GetEndpoint().X();
-						thePhoton.fReflectionY = curStep.GetEndpoint().Y();
-						thePhoton.fReflectionZ = curStep.GetEndpoint().Z();
-						thePhoton.fReflectionRadius = curStep.GetEndpoint().Mag();
+						RAT::DS::MCTrackStep temp_track_step = *curTrack.GetMCTrackStep(step_index-1);
+						thePhoton.fReflectionX = temp_track_step.GetEndpoint().X();
+						thePhoton.fReflectionY = temp_track_step.GetEndpoint().Y();
+						thePhoton.fReflectionZ = temp_track_step.GetEndpoint().Z();
+						thePhoton.fReflectionRadius = temp_track_step.GetEndpoint().Mag();
 						thePhoton.reflected = true;
-						thePhoton.fReflectionTime = curStep.GetGlobalTime();
+						thePhoton.fReflectionTime = temp_track_step.GetGlobalTime();
 					}
 				}
 				
