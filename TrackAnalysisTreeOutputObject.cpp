@@ -465,6 +465,10 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 						std::cout << "Reflection detected in track#" << curTrack.GetTrackID() << std::endl;
 						std::cout << "\t " << curTrack.GetMCTrackStep(step_index-1)->GetVolume() << ":" << curTrack.GetMCTrackStep(step_index-1)->GetStepStatus() << std::endl;
 						std::cout << "\t " << curStep.GetVolume() << ":" << curStep.GetStepStatus() << std::endl;
+						if ( step_index < curTrack.GetMCTrackStepCount() - 1 )
+						{
+							std::cout << "\t " << curTrack.GetMCTrackStep(step_index+1)->GetVolume() << ":" << curTrack.GetMCTrackStep(step_index+1)->GetStepStatus() << std::endl;
+						}
 #endif
 					}
 				}
