@@ -363,13 +363,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 				//doesn't because find() returns a forward iterator.
 				track_rit = tracks.rbegin();
 			}
-<<<<<<< HEAD:TrackAnalysisTreeOutputObject.cpp
 			else track_rit++;
-=======
-			
-			if ( resetIterator ) track_rit = tracks.rbegin();
-			else track_rit--;
->>>>>>> fbc3c73c064f8a88c774677eabb11aeaa55ed917:TrackAnalysisTreeOutputObject.cpp
 		}
 #ifndef CLUSTER_RUN		
 #ifdef PRINT_TRACK_DEBUG
