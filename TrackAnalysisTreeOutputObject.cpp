@@ -437,21 +437,20 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 					//This will track the totally internally reflected photons.
 					//To actually capture the step that reflects, we need to get
 					//the last photon back!
-		/*			if ( curStep.GetStepStatus() == "GeomBoundary" ) 
+					if ( curStep.GetEndVolume() == curTrack.GetMCTrackStep(step_index-1)->GetVolume() ) 
 					{
 						RAT::DS::MCTrackStep temp_track_step = *curTrack.GetMCTrackStep(step_index-1);
 						thePhoton.fReflectionX = temp_track_step.GetEndpoint().X();
-						thePhoton.fReflectionY = temp_track_step.GetEndpoint().Y();
-						thePhoton.fReflectionZ = temp_track_step.GetEndpoint().Z();
-						thePhoton.fReflectionRadius = temp_track_step.GetEndpoint().Mag();
-						thePhoton.reflected = true;
-						thePhoton.fReflectionTime = temp_track_step.GetGlobalTime();
+                                                thePhoton.fReflectionY = temp_track_step.GetEndpoint().Y();
+                                                thePhoton.fReflectionZ = temp_track_step.GetEndpoint().Z();
+                                                thePhoton.fReflectionRadius = temp_track_step.GetEndpoint().Mag();
+                                                thePhoton.reflected = true;
 					}
-		*/			
+					
 					//If the current stepstatus is NOT GeomBoundary AND the
 					//volume has changed between the current step and the 
 					//previous, we have undergone a reflection.
-					bool volumeChanged = !( curStep.GetVolume() == curTrack.GetMCTrackStep(step_index-1)->GetVolume() );
+/*					bool volumeChanged = !( curStep.GetVolume() == curStep.GetEndVolume() ); 
 					if ( (curStep.GetStepStatus() != "GeomBoundary") && volumeChanged )
 					{
 						RAT::DS::MCTrackStep temp_track_step = *curTrack.GetMCTrackStep(step_index-1);
@@ -471,7 +470,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 						}
 #endif
 					}
-				}
+	*/			}
 				
 				//Checks to see if the photon is a Scintillation photon.
 				if ( ( currentProcess == "Scintillation" ) && ( thePhoton.scintillation == false ) )
