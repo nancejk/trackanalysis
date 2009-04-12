@@ -441,10 +441,11 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 					{
 						RAT::DS::MCTrackStep temp_track_step = *curTrack.GetMCTrackStep(step_index-1);
 						thePhoton.fReflectionX = temp_track_step.GetEndpoint().X();
-                                                thePhoton.fReflectionY = temp_track_step.GetEndpoint().Y();
-                                                thePhoton.fReflectionZ = temp_track_step.GetEndpoint().Z();
-                                                thePhoton.fReflectionRadius = temp_track_step.GetEndpoint().Mag();
-                                                thePhoton.reflected = true;
+						thePhoton.fReflectionY = temp_track_step.GetEndpoint().Y();
+						thePhoton.fReflectionZ = temp_track_step.GetEndpoint().Z();
+						thePhoton.fReflectionRadius = temp_track_step.GetEndpoint().Mag();
+						thePhoton.fReflectionTime = temp_track_step.GetGlobalTime();
+						thePhoton.reflected = true;
 #ifdef REFLECTION_DEBUG
 						std::cout << "Reflection detected in track#" << curTrack.GetTrackID() << std::endl;
 						std::cout << "\t " << temp_track_step.GetVolume() << ":" << temp_track_step.GetEndVolume() << "(" << temp_track_step.GetStepStatus() <<  ")" << std::endl;
