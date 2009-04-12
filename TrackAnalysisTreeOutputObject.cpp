@@ -27,6 +27,7 @@ void ClearTrackedPhoton(TrackedOpticalPhoton& thePhoton)
 	thePhoton.fReflectionZ = 0;
 	thePhoton.fReflectionRadius = 0;
 	thePhoton.reemissions = 0;
+	thePhoton.reflections = 0;
 	thePhoton.defHit = false;
 	thePhoton.indefHit = false;
 	thePhoton.reemitted = false;
@@ -226,7 +227,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 	TBranch* theBranch = theResultingTree->Branch(
 												  "TrackedOpticalPhotons",
 												  &thePhoton,
-												  "eventNo/i:parentID:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:fReflectionTime:fReflectionX:fReflectionY:fReflectionZ:fReflectionRadius:reemissions/i:defHit/b:indefHit:reemitted:cerenkov:scintillation:reflected");
+												  "eventNo/i:parentID:fGenerationTime/F:fGenerationRadius:fGenerationEnergy:fPMTHitTime:fPMTHitEnergy:fReflectionTime:fReflectionX:fReflectionY:fReflectionZ:fReflectionRadius:reemissions/i:reflections:defHit/b:indefHit:reemitted:cerenkov:scintillation:reflected");
 	//All we are going to do, for starters, is get the tracks, print out the 
 	//steps, join the tracks, and print them out again.  Easy stuff.  This will
 	//also give an easy way to track where the code is going wrong (or right).
@@ -446,6 +447,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 						thePhoton.fReflectionRadius = temp_track_step.GetEndpoint().Mag();
 						thePhoton.fReflectionTime = temp_track_step.GetGlobalTime();
 						thePhoton.reflected = true;
+						thePhoton.reflections++;
 #ifdef REFLECTION_DEBUG
 						std::cout << "Reflection detected in track#" << curTrack.GetTrackID() << std::endl;
 						std::cout << "\t " << temp_track_step.GetVolume() << ":" << temp_track_step.GetEndVolume() << "(" << temp_track_step.GetStepStatus() <<  ")" << std::endl;

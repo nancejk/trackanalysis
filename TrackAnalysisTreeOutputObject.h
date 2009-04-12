@@ -51,6 +51,7 @@ struct TrackedOpticalPhoton
 	float fReflectionZ;
 	float fReflectionRadius;
 	unsigned reemissions;
+	unsigned reflections;
 	bool defHit;
 	bool indefHit;
 	bool reemitted;
