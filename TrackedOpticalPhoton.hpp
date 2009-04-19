@@ -14,6 +14,11 @@ public:
 	void Reset();
 	bool CheckIntegrity();
 	bool QueuesEmpty();
+	bool Reflected();
+	unsigned ReflectionCount();
+	TVector3 FirstReflection();
+	TVector3 LastReflection();
+	bool AddReflection(float,float,float);
 private:
 	unsigned fEventNo;
 	std::deque<float> fReflectionX;
