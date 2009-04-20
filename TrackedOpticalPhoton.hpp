@@ -12,13 +12,21 @@ class TrackedOpticalPhoton : public TObject
 public:
 	TrackedOpticalPhoton();
 	void Reset();
+	bool CheckIntegrity() const;
 	bool CheckIntegrity();
+	bool QueuesEmpty() const;
 	bool QueuesEmpty();
+	bool Reflected() const;
 	bool Reflected();
+	unsigned ReflectionCount() const;
 	unsigned ReflectionCount();
+	TVector3 FirstReflection() const;
 	TVector3 FirstReflection();
+	TVector3 LastReflection() const;
 	TVector3 LastReflection();
 	bool AddReflection(float,float,float);
+	friend std::ostream& operator << (std::ostream&, const TrackedOpticalPhoton&);
+	friend std::ostream& operator << (std::ostream&, TrackedOpticalPhoton&);
 private:
 	unsigned fEventNo;
 	std::deque<float> fReflectionX;
