@@ -107,6 +107,12 @@ public:
 	a stream.*/
 	friend std::ostream& operator << (std::ostream&, const TrackedOpticalPhoton&);
 	friend std::ostream& operator << (std::ostream&, TrackedOpticalPhoton&);
+	/*Booleans for processes.*/
+	bool isCerenkov;
+	bool isScintillation;
+	bool isReemitted;
+	/*Reemission counter.*/
+	unsigned ReemissionCount;
 private:
 	/*The private data stores of this object.  Deques are used instead of vectors
 	for their increased efficiency in adding and deleting members at the ends.*/
@@ -122,6 +128,7 @@ private:
 	/*Booleans for PMT hit information.*/
 	bool hitCathode;
 	bool triggeredDAQ;
+	
 //------------//
 //ROOT business
 ClassDef(TrackedOpticalPhoton,1);

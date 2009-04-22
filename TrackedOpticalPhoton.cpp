@@ -4,7 +4,13 @@ ClassImp(TrackedOpticalPhoton);
 
 TrackedOpticalPhoton::TrackedOpticalPhoton() :
 	fEventNo(0),
-	fParentID(0)
+	fParentID(0),
+	isCerenkov(false),
+	isScintillation(false),
+	isReemitted(false),
+	ReemissionCount(0),
+	hitCathode(false),
+	triggeredDAQ(false)
 { }
 
 void TrackedOpticalPhoton::Reset()
@@ -13,6 +19,10 @@ void TrackedOpticalPhoton::Reset()
 	fParentID = 0;
 	hitCathode = false;
 	triggeredDAQ = false;
+	isCerenkov = false;
+	isReemitted = false;
+	isScintillation = false;
+	ReemissionCount = 0;
 	while ( fReflectionX.empty() == false )
 	{ fReflectionX.pop_back(); }
 	while ( fReflectionY.empty() == false )
