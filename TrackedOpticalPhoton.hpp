@@ -83,6 +83,14 @@ public:
 	this->ReflectionCount().*/
 	float GetReflectionTime(unsigned) const;
 	float GetReflectionTime(unsigned);
+	/*Returns true if this track _ever_ reflected from a point with radial
+	position less than this value.*/
+	bool DidReflectFromLessThan(float) const;
+	bool DidReflectFromLessThan(float);
+	/*Returns true is this track _ever_ reflected from a point with radial
+	position greater than this value.*/
+	bool DidReflectFromGreaterThan(float) const;
+	bool DidReflectFromGreaterThan(float);
 	/*Adds a reflection to *this.  No const method is provided for
 	obvious reasons.*/
 	bool AddReflection(float,float,float,float);

@@ -1,4 +1,5 @@
 #include "TrackedOpticalPhoton.hpp"
+#include <cmath> //For sqrt()
 
 ClassImp(TrackedOpticalPhoton);
 
@@ -237,4 +238,62 @@ bool TrackedOpticalPhoton::DefiniteHit() const
 bool TrackedOpticalPhoton::DefiniteHit()
 {
 	return static_cast<const TrackedOpticalPhoton&>(*this).DefiniteHit();
+}
+
+bool TrackedOpticalPhoton::DidReflectFromLessThan(float reflRadius) const
+{
+	//First be sure that the length of the queues are all equal.
+	assert( this->CheckIntegrity() );
+	//Now get an iterator to the X reflection queue, and move through it 
+	//sequentially.  If ever the magnitude of the three queues taken together
+	//is less than the requested value, return true.
+	std::deque<float>::const_iterator it = fReflectionX.begin();
+	float tempRadius(0);
+	std::size_t tempPos(0);
+	while ( it != fReflectionX.end() )
+	{
+		tempRadius = std::sqrt( (*it)*(*it) + 
+						fReflectionY[tempPos]*fReflectionY[tempPos] +
+						fReflectionZ[tempPos]*fReflectionZ[tempPos]);
+		if (tempRadius < reflRadius) return true;
+		it++;
+		tempPos++;
+	}
+	//At this point we've checked all possible values, and haven't ever 
+	//returned true.  So the criteria must be false.
+	return false;
+}
+
+bool TrackedOpticalPhoton::DidReflectFromLessThan(float reflRadius) 
+{
+	return static_cast<const TrackedOpticalPhoton&>(*this).DidReflectFromLessThan(reflRadius);
+}
+
+bool TrackedOpticalPhoton::DidReflectFromGreaterThan(float reflRadius) const
+{
+	//First be sure that the length of the queues are all equal.
+	assert( this->CheckIntegrity() );
+	//Now get an iterator to the X reflection queue, and move through it 
+	//sequentially.  If ever the magnitude of the three queues taken together
+	//is less than the requested value, return true.
+	std::deque<float>::const_iterator it = fReflectionX.begin();
+	float tempRadius(0);
+	std::size_t tempPos(0);
+	while ( it != fReflectionX.end() )
+	{
+		tempRadius = sqrt( (*it)*(*it) + 
+						fReflectionY[tempPos]*fReflectionY[tempPos] +
+						fReflectionZ[tempPos]*fReflectionZ[tempPos]);
+		if (tempRadius > reflRadius) return true;
+		it++;
+		tempPos++;
+	}
+	//At this point we've checked all possible values, and haven't ever 
+	//returned true.  So the criteria must be false.
+	return false;
+}
+
+bool TrackedOpticalPhoton::DidReflectFromGreaterThan(float reflRadius)
+{
+	return static_cast<const TrackedOpticalPhoton&>(*this).DidReflectFromGreaterThan(reflRadius);
 }
