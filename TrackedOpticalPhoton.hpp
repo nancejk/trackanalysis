@@ -106,10 +106,10 @@ public:
 	/*Adds a PMT Hit in (XYZT) coordinates.  If the TrackedOpticalPhoton
 	retains its integrity after the add, this returns true.*/
 	bool AddPMTHit(float,float,float,float);
-	/*Inocuous information about when and by whom this photon was
-	generated.*/
+	/*The Monte Carlo event number of the run in which this photon 
+	was generated.*/
 	unsigned fEventNo;
-	/*The Monte Carlo event number of the run in which this photon was generated.*/
+	/*The parentID of the track which produced this one.*/
 	unsigned fParentID;	
 	/*std::ostream helper functions to display track data through
 	a stream.*/
@@ -121,6 +121,10 @@ public:
 	bool isReemitted;
 	/*Reemission counter.*/
 	unsigned ReemissionCount;
+	/*Birthplace.*/
+	float fBirthX;
+	float fBirthY;
+	float fBirthZ;
 private:
 	/*The private data stores of this object.  Deques are used instead of vectors
 	for their increased efficiency in adding and deleting members at the ends.*/
@@ -136,7 +140,6 @@ private:
 	/*Booleans for PMT hit information.*/
 	bool hitCathode;
 	bool triggeredDAQ;
-	
 //------------//
 //ROOT business
 ClassDef(TrackedOpticalPhoton,1);

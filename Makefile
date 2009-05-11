@@ -1,4 +1,4 @@
-RATROOT := /Users/nancejk/Code/svn_repos/sasquatch/rat
+RATROOT := /Users/nancejk/Code/svn_repos/sasquatch/dev/rat
 
 track_analysis_athena:
 	icpc -UPRINT_TRACK_DEBUG -O2 -openmp -o trackanalysis -Wall -lRATEvent_Linux-g++ -I`root-config --incdir` `root-config --libs` -I$(RATROOT)/src/stlplus -I$(RATROOT)/include -L$(RATROOT)/lib TrackAnalysisTreeOutputObject.cpp main.cpp
@@ -18,7 +18,7 @@ routine:
 	g++ -o trackanalysis -Wall -L. -lTrackAnalysis dictTOP.C TrackedOpticalPhoton.cpp -L$(ROOTSYS)/lib/root -I$(ROOTSYS)/include/root -lCore -lRIO -lTree -lcint -lPhysics
 
 test:
-	sh /Users/nancejk/Code/svn_repos/sasquatch/rat/env.sh
+	sh /Users/nancejk/Code/svn_repos/sasquatch/dev/rat/env.sh
 	g++ -o toptest -Wall -I. -L. -lTrackAnalysis test.cpp MCTrackHelper.cpp -L$(ROOTSYS)/lib/root -I$(ROOTSYS)/include/root -lCore -lRIO -lTree -lcint -lPhysics -I$(RATROOT)/src/stlplus -I$(RATROOT)/include -L$(RATROOT)/lib -lRATEvent_Darwin-g++
 
 unmake:

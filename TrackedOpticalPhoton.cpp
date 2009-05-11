@@ -11,7 +11,10 @@ TrackedOpticalPhoton::TrackedOpticalPhoton() :
 	isReemitted(false),
 	ReemissionCount(0),
 	hitCathode(false),
-	triggeredDAQ(false)
+	triggeredDAQ(false),
+	fBirthX(0),
+	fBirthY(0),
+	fBirthZ(0)
 { }
 
 void TrackedOpticalPhoton::Reset()
@@ -40,6 +43,9 @@ void TrackedOpticalPhoton::Reset()
 	{ fPMTHitZ.pop_back(); }
 	while ( fPMTHitT.empty() == false )
 	{ fPMTHitT.pop_back(); }
+	fBirthX = 0;
+	fBirthY = 0;
+	fBirthZ = 0;
 }
 
 bool TrackedOpticalPhoton::CheckIntegrity() const

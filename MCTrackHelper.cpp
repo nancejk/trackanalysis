@@ -189,6 +189,10 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			//order, but that is immaterial.
 			RAT::DS::MCTrack curTrack = track_it->second;
 			thePhoton.fParentID = curTrack.GetParentID();
+			//Set the birthplace for this track.
+			thePhoton.fBirthX = curTrack.GetMCTrackStep(0)->GetEndpoint().X();
+			thePhoton.fBirthY = curTrack.GetMCTrackStep(0)->GetEndpoint().Y();
+			thePhoton.fBirthZ = curTrack.GetMCTrackStep(0)->GetEndpoint().Z();
 			//Now check the trackID against the list of known hits.
 			if ( hit_list[curTrack.GetTrackID() - 1] == true ) thePhoton.MarkDefiniteHit();
 		
