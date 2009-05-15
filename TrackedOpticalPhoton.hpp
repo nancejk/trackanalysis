@@ -96,8 +96,8 @@ public:
 	bool AddReflection(float,float,float,float);
 	/*Returns the time of the first photocathode hit for this photon.
 	assert() will fail if this photon never hit a PMT.*/
-	float GetFirstPMTHitTime() const;
-	float GetFirstPMTHitTime();
+	float FirstPMTHitTime() const;
+	float FirstPMTHitTime();
 	/*Returns the time of the i'th PMT Hit (there is usually only one),
 	where i is the argument to this method.  assert() will fail if
 	i is greater than this->HitCount().*/
@@ -125,6 +125,8 @@ public:
 	float fBirthX;
 	float fBirthY;
 	float fBirthZ;
+	/*Lifetime information.*/
+	float totalLength;
 private:
 	/*The private data stores of this object.  Deques are used instead of vectors
 	for their increased efficiency in adding and deleting members at the ends.*/

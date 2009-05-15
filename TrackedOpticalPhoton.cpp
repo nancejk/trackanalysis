@@ -10,11 +10,12 @@ TrackedOpticalPhoton::TrackedOpticalPhoton() :
 	isScintillation(false),
 	isReemitted(false),
 	ReemissionCount(0),
-	hitCathode(false),
-	triggeredDAQ(false),
 	fBirthX(0),
 	fBirthY(0),
-	fBirthZ(0)
+	fBirthZ(0),
+	totalLength(0),
+	hitCathode(false),
+	triggeredDAQ(false)
 { }
 
 void TrackedOpticalPhoton::Reset()
@@ -46,6 +47,7 @@ void TrackedOpticalPhoton::Reset()
 	fBirthX = 0;
 	fBirthY = 0;
 	fBirthZ = 0;
+	totalLength = 0;
 }
 
 bool TrackedOpticalPhoton::CheckIntegrity() const
@@ -177,16 +179,16 @@ float TrackedOpticalPhoton::GetReflectionTime(unsigned index)
 	return static_cast<const TrackedOpticalPhoton&>(*this).GetReflectionTime(index);
 }
 
-float TrackedOpticalPhoton::GetFirstPMTHitTime() const
+float TrackedOpticalPhoton::FirstPMTHitTime() const
 {
 	assert( this->IndefiniteHit() );
 	float _time = fPMTHitT[0];
 	return _time;
 }
 
-float TrackedOpticalPhoton::GetFirstPMTHitTime()
+float TrackedOpticalPhoton::FirstPMTHitTime()
 {
-	return static_cast<const TrackedOpticalPhoton&>(*this).GetFirstPMTHitTime();
+	return static_cast<const TrackedOpticalPhoton&>(*this).FirstPMTHitTime();
 }
 
 float TrackedOpticalPhoton::GetPMTHitTime(unsigned index) const

@@ -193,6 +193,7 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 			thePhoton.fBirthX = curTrack.GetMCTrackStep(0)->GetEndpoint().X();
 			thePhoton.fBirthY = curTrack.GetMCTrackStep(0)->GetEndpoint().Y();
 			thePhoton.fBirthZ = curTrack.GetMCTrackStep(0)->GetEndpoint().Z();
+			thePhoton.totalLength = curTrack.GetLength();
 			//Now check the trackID against the list of known hits.
 			if ( hit_list[curTrack.GetTrackID() - 1] == true ) thePhoton.MarkDefiniteHit();
 		
