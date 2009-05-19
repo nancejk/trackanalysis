@@ -1,2 +1,0 @@
-ClearTrackedPhoton	TrackAnalysisTreeOutputObject.cpp	/^void ClearTrackedPhoton(TrackedOpticalPhoton& theP/
-GrowPhotonTree	TrackAnalysisTreeOutputObject.cpp	/^TTree* GrowPhotonTree( RAT::DSReader& theDS )$/
