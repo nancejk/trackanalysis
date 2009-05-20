@@ -1,0 +1,7 @@
+To compile the source, you need to export 
+	RATROOT = /path/to/rat/base/dir
+_and_ root must be in your PATH - i.e. you should be
+able to run ROOT from the command line.
+
+Then just type Make and hopefully the makefile will
+take care of the rest.
