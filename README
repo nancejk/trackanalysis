@@ -1,0 +1,31 @@
+TrackAnalysis is a photon process accounting program.  It runs as a 
+'post-processing' step for RAT output files in ROOT format.  Essentially
+it uses ROOTs object serialization tools to provide access to a class
+called TrackedOpticalPhoton (described in TrackedOpticalPhoton.hpp) 
+which stores the 'distilled' track information about the photons in the
+simulation.  The compression in size is about an order of magnitude.
+
+In order to use this package, you must:
+
+	1) Compile it (obviously)
+	2) Turn on trajectory storing in your RAT macros with
+		/tracking/storeTrajectory 1
+
+After that, you can use the program by running
+
+	trackanalysis <input> <output>
+
+You should be very careful about mixing up the order here, as 
+trackanalysis currently opens output files as RECREATE - meaning
+that if it already exists, it gets overwritten.  The implication is that
+if you have an input file you want to process, and you accidentally give
+it the name that you want it to output to, it will happily delete your
+input file and then inform you that it's a little strange that you asked
+it to process a file with no data in it.
+
+Keep in mind that the output files can be enormous when track storage
+is on!  50 3.2MeV electron events is approximately 1G.  The bright side
+is that you will get ~2M photons as a result (50*3.2*11000 photons/MeV).
+
+Further documentation is coming, but for now, I encourage you to read the
+header files to find out what information you can get out of these tracks.
