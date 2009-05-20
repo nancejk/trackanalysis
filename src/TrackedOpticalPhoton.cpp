@@ -305,3 +305,4 @@ bool TrackedOpticalPhoton::DidReflectFromGreaterThan(float reflRadius)
 {
 	return static_cast<const TrackedOpticalPhoton&>(*this).DidReflectFromGreaterThan(reflRadius);
 }
+
