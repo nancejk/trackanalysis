@@ -1,8 +1,12 @@
 ROOTLIBS = $(shell root-config --libs)
 ROOTINC = -I$(shell root-config --incdir)
 
+#For ROOTCINT
 TOPOBJ:=include/TrackedOpticalPhoton.hpp
 TOPLINKDEF:=include/LinkDef.h
+
+#TRACKANALYSIS DEFS
+TAOBJ:=
 
 test:
 ifeq ($(shell uname),Darwin)
@@ -10,4 +14,6 @@ ifeq ($(shell uname),Darwin)
 endif
 
 dictTOP.C: $(TOPOBJ)
-	rootcint  
+	rootcint dictTOP.C -c -p $(TOPOBJ) $(TOPLINKDEF)
+
+trackanalysis: 
