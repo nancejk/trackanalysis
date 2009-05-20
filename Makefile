@@ -7,6 +7,10 @@ TAINC:=-I./include
 TOPOBJ:=include/TrackedOpticalPhoton.hpp
 TOPLINKDEF:=include/LinkDef.h
 
+#For ROOT Compatibility < 5.22
+ROOTMJVER:=$(shell root-config --version | sed -e 's/\.[0-9]\{2\}\/[0-9]\{2\}//')
+ROOTMNVER:=$(shell root-config --version | sed -e 's/5\.//' -e 's/\/[0-9]\{2\}//')
+
 #TRACKANALYSIS DEFS
 TALIBOBJ:=src/TrackedOpticalPhoton.cpp src/MCTrackHelper.cpp
 TAOBJ:=src/ta.cpp
@@ -21,7 +25,10 @@ LINRATLIB:=RATEvent_Linux-g++
 CXX:=g++
 CXXFLAGS:=-O2 -Wall
 
-all: dictTOP.C libTA TAbin
+all: defenv dictTOP.C libTA TAbin
+
+defenv:
+ifeq ($(shell ),0)	
 
 dictTOP.C: $(TOPOBJ)
 	rootcint dictTOP.C -c -p $(TOPOBJ) $(TOPLINKDEF)
