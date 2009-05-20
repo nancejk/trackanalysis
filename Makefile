@@ -31,7 +31,7 @@ ifeq ($(shell uname),Darwin)
 	$(CXX) $(CXXFLAGS) -o libTrackAnalysis.dylib -dynamiclib dictTOP.C $(RATINC) $(TAINC) $(TALIBOBJ) $(ROOTLIBS) $(ROOTINC) $(RATLIB) -l$(MACRATLIB)
 	ln -sf libTrackAnalysis.dylib libTrackAnalysis.so
 else ifeq ($(shell uname),Linux)
-	$(CXX) $(CXXFLAGS) -o libTrackAnalysis.so -shared dictTOP.C $(RATINC) $(TAINC) $(TALIBOBJ) $(ROOTLIBS) $(ROOTINC) $(RATLIB) -l$(LINRATLIB)
+	$(CXX) $(CXXFLAGS) -fPIC -m64 -o libTrackAnalysis.so -shared dictTOP.C $(RATINC) $(TAINC) $(TALIBOBJ) $(ROOTLIBS) $(ROOTINC) $(RATLIB) -l$(LINRATLIB)
 endif
 
 TAbin: $(TAOBJ)
