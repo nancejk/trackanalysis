@@ -23,13 +23,17 @@ LINRATLIB:=RATEvent_Linux-g++
 
 #CXX DEFS
 CXX:=g++
-CXXFLAGS:=-O2 -Wall
+CXXFLAGS=-O2 -Wall
 
-all: defenv dictTOP.C libTA TAbin
-
-defenv:
-ifeq ($(shell ),0)	
+ifeq ($(shell test `root-config --version | sed -e 's/\.[0-9]\{2\}\/[0-9]\{2\}//'` -lt 5 && echo 0),0)
+@exit 2	
 endif
+
+ifeq ($(shell test `root-config --version | sed -e 's/5\.//' -e 's/\/[0-9]\{2\}//'` -lt 22 && echo 0),)
+CXXFLAGS+=-D__ROOTVERLT522
+endif
+
+all: dictTOP.C libTA TAbin
 
 dictTOP.C: $(TOPOBJ)
 	rootcint dictTOP.C -c -p $(TOPOBJ) $(TOPLINKDEF)
