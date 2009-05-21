@@ -24,10 +24,19 @@ LINRATLIB:=RATEvent_Linux-g++
 #CXX DEFS
 CXX:=g++
 CXXFLAGS=-O2 -Wall
+LIBFLAGS=
+LIBNAME=TrackAnalysis
 
 #ROOT < v5.22 compatibility checks
-ifeq ($(shell test `root-config --version | sed -e 's/5\.//' -e 's/\/[0-9]\{2\}//'` -lt 22 && echo 0),)
+ifeq ($(shell test `root-config --version | sed -e 's/5\.//' -e 's/\/[0-9]\{2\}//'` -lt 22 && echo 0),0)
 CXXFLAGS+=-D__ROOTVERLT522
+endif
+
+#OSX v. Linux environment checks.
+ifeq ($(shell uname),Darwin)
+LIBFLAGS+=-dynamiclib
+override LIBNAME:=$(addprefix lib,$(LIBNAME))
+override LIBNAME:=$(addsuffix .dylib,$(LIBNAME))
 endif
 
 all: dictTOP.C libTA TAbin
@@ -37,8 +46,8 @@ dictTOP.C: $(TOPOBJ)
 
 libTA: dictTOP.C $(TALIBOBJ)
 ifeq ($(shell uname),Darwin)
-	$(CXX) $(CXXFLAGS) -o libTrackAnalysis.dylib -dynamiclib dictTOP.C $(RATINC) $(TAINC) $(TALIBOBJ) $(ROOTLIBS) $(ROOTINC) $(RATLIB) -l$(MACRATLIB)
-	ln -sf libTrackAnalysis.dylib libTrackAnalysis.so
+	$(CXX) $(CXXFLAGS) -o $(LIBNAME) $(LIBFLAGS) dictTOP.C $(RATINC) $(TAINC) $(TALIBOBJ) $(ROOTLIBS) $(ROOTINC) $(RATLIB) -l$(MACRATLIB)
+	ln -sf $(LIBNAME) $(LIBNAME:.dylib=.so) 
 else ifeq ($(shell uname),Linux)
 	$(CXX) $(CXXFLAGS) -fPIC -m64 -o libTrackAnalysis.so -shared dictTOP.C $(RATINC) $(TAINC) $(TALIBOBJ) $(ROOTLIBS) $(ROOTINC) $(RATLIB) -l$(LINRATLIB)
 endif
