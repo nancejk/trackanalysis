@@ -29,6 +29,7 @@ all: defenv dictTOP.C libTA TAbin
 
 defenv:
 ifeq ($(shell ),0)	
+endif
 
 dictTOP.C: $(TOPOBJ)
 	rootcint dictTOP.C -c -p $(TOPOBJ) $(TOPLINKDEF)

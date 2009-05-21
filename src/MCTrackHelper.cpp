@@ -8,8 +8,19 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 	RAT::DS::Root* theDSEvent = NULL;
 	RAT::DS::MC* theDSMC = NULL;
 	static TrackedOpticalPhoton thePhoton;
-	TTree* theResultingTree = new TTree("T","Data From Tracked Optical Photons");
-	TBranch* theBranch = theResultingTree->Branch("TrackedOpticalPhotons", &thePhoton);
+	TTree* theResultingTree = new TTree("T",
+										"Data From Tracked Optical Photons");
+
+//For ROOT compatibility.  For versions 5.22 and up, it's legal to omit the
+//name of the class in this call.  Before then, we need to call it by name.
+#ifdef __ROOTVERLT522
+	TBranch* theBranch = theResultingTree->Branch("TrackedOpticalPhotons",
+										"TrackedOpticalPhoton",&thePhoton);
+#else 
+	TBranch* theBranch = theResultingTree->Branch("TrackedOpticalPhotons",
+											&thePhoton);
+#endif
+
 	//All we are going to do, for starters, is get the tracks, print out the 
 	//steps, join the tracks, and print them out again.  Easy stuff.  This will
 	//also give an easy way to track where the code is going wrong (or right).
