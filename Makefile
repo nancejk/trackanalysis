@@ -25,10 +25,7 @@ LINRATLIB:=RATEvent_Linux-g++
 CXX:=g++
 CXXFLAGS=-O2 -Wall
 
-ifeq ($(shell test `root-config --version | sed -e 's/\.[0-9]\{2\}\/[0-9]\{2\}//'` -lt 5 && echo 0),0)
-@exit 2	
-endif
-
+#ROOT < v5.22 compatibility checks
 ifeq ($(shell test `root-config --version | sed -e 's/5\.//' -e 's/\/[0-9]\{2\}//'` -lt 22 && echo 0),)
 CXXFLAGS+=-D__ROOTVERLT522
 endif
