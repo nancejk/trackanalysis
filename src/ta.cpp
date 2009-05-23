@@ -11,8 +11,8 @@ int main(int argc, const char* argv[])
 	TFile _file(outFile.c_str(),"RECREATE");
 	RAT::DSReader data(inFile.c_str());
 	TTree* theTree = GrowJoinedPhotonTree(data);
-	
-	_file.Write();
-
+	theTree->Print();
+	std::cout << "Wrote " << _file.Sizeof() << 
+				" bytes on " << outFile << std::endl;
 	return EXIT_SUCCESS;
 }

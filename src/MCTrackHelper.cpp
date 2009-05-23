@@ -20,7 +20,10 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 	TBranch* theBranch = theResultingTree->Branch("TrackedOpticalPhotons",
 											&thePhoton);
 #endif
-
+	//This is just to keep the compiler from complaining about the use of the
+	//TBranch.
+	theBranch->UpdateAddress();
+	
 	//All we are going to do, for starters, is get the tracks, print out the 
 	//steps, join the tracks, and print them out again.  Easy stuff.  This will
 	//also give an easy way to track where the code is going wrong (or right).
@@ -281,7 +284,6 @@ TTree* GrowJoinedPhotonTree( RAT::DSReader& theDS )
 		
 	//Now just return the tree we built.
 #ifndef CLUSTER_RUN
-	theResultingTree->Print();
 #endif
 	return theResultingTree;
 }

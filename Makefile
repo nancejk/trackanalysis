@@ -58,6 +58,7 @@ dictTOP.C: $(TOPOBJ)
 libTA: dictTOP.C $(TALIBOBJ)
 	$(CXX) $(CXXFLAGS) -o $(LIBNAME) $(LIBFLAGS) dictTOP.C $(RATINC) $(TAINC) $(TALIBOBJ) $(ROOTLIBS) $(ROOTINC) $(RATLIB) -l$(RATEVLIB)
 ifeq ($(HOSTSYS),Darwin)
+	@echo 'Creating softlink for ROOT compatibility...'
 	ln -sf $(LIBNAME) $(LIBNAME:.dylib=.so) 
 endif
 
