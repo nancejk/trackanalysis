@@ -66,7 +66,8 @@ TAbin: $(TAOBJ)
 	$(CXX) $(CXXFLAGS) -o $(TABINNAME) $(TAINC) $(TALIB) $(TAOBJ) $(RATINC) $(ROOTINC) $(ROOTLIBS) $(RATLIB) -l$(RATEVLIB)
 
 clean:
-	rm dictTOP.* 
+	rm dictTOP.*
 
 distclean:
 	rm dictTOP.* libTrackAnalysis.* trackanalysis
+
