@@ -12,8 +12,8 @@ ROOTMJVER:=$(shell root-config --version | sed -e 's/\.[0-9]\{2\}\/[0-9]\{2\}//'
 ROOTMNVER:=$(shell root-config --version | sed -e 's/5\.//' -e 's/\/[0-9]\{2\}//')
 
 #TRACKANALYSIS DEFS
-TALIBOBJ:=src/TrackedOpticalPhoton.cpp src/MCTrackHelper.cpp
-TAOBJ:=src/ta.cpp
+TALIBOBJ:=src/TrackedOpticalPhoton.cpp 
+TAOBJ:=src/ta.cpp src/MCTrackHelper.cpp
 TALIB:=-L. -lTrackAnalysis
 TABINNAME:=trackanalysis
 
@@ -56,7 +56,7 @@ dictTOP.C: $(TOPOBJ)
 	rootcint dictTOP.C -c -p $(TOPOBJ) $(TOPLINKDEF)
 
 libTA: dictTOP.C $(TALIBOBJ)
-	$(CXX) $(CXXFLAGS) -o $(LIBNAME) $(LIBFLAGS) dictTOP.C $(RATINC) $(TAINC) $(TALIBOBJ) $(ROOTLIBS) $(ROOTINC) $(RATLIB) -l$(RATEVLIB)
+	$(CXX) $(CXXFLAGS) -o $(LIBNAME) $(LIBFLAGS) dictTOP.C $(RATINC) $(TAINC) $(TALIBOBJ) $(ROOTLIBS) $(ROOTINC) 
 ifeq ($(HOSTSYS),Darwin)
 	@echo 'Creating softlink for ROOT compatibility...'
 	ln -sf $(LIBNAME) $(LIBNAME:.dylib=.so) 
